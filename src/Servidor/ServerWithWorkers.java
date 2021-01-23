@@ -25,16 +25,18 @@ public class ServerWithWorkers {
                         int tag = frame.tag;
                         String data = new String(frame.data);
                         switch(tag){
-                            case 0:
-                                System.out.println("Got one-way: " + data);
-                                break;
                             case 1:
                                 System.out.println("Login");
                                 c.send(frame.tag, data.toUpperCase().getBytes());
+                                //System.out.println(frame.data.readUTF());
+                                break;
+                            default:
                                 break;
                         }
                         if(tag!=1){
-                            if (frame.tag == 0)
+                            if (frame.tag == 0){
+                                System.out.println("Got one-way: " + data);
+                            }
                             else if (frame.tag % 2 == 1) {
                                 System.out.println("Replying to: " + data);
                                 c.send(frame.tag, data.toUpperCase().getBytes());
