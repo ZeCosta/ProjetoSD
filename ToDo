@@ -9,5 +9,23 @@ Funcionamento do projeto:
 
  -No servidor separar a Logica de negócio e parte do servidor
 
+Utilizador:
+	- Username
+	- Password (hashed)
+	- infetado (boolean)
+	- localização corrente
+	- coleção dos usernames dos contactos
+	- logado
+	- tem lock
+
+
+LN:
+	- Mapa de String(username) para Utilizador
+	- Matriz de coleção de string
+	- tem lock
+
+Servidor:
+	- LN
+
 ToDo:
  -Criar logica de negócio no SV e etc.
