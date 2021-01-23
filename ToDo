@@ -1,0 +1,13 @@
+Funcionamento do projeto:
+ -cliente faz login
+ -projeto uma thread para perguntar se esta em risco (ou sleeps ou fica a espera de resposta)
+ -outra thread(acho que nem precisa de ser uma thread) que tem o menu com as opçoes
+
+ -Criar um Stub?
+
+ -demultiplexer para quando há mais que uma thread nao haver confusão nos frames recebidos
+
+ -No servidor separar a Logica de negócio e parte do servidor
+
+ToDo:
+ -Criar logica de negócio no SV e etc.
