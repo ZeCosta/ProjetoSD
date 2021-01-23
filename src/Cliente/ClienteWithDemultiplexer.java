@@ -9,6 +9,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class ClienteWithDemultiplexer {
+	
+	private static Socket s;
+    private static Demultiplexer c;
+
 	private static void apresentarMenuRL(){
 		System.out.println("-------Menu RL-------");
 		System.out.println("0. Sair");
@@ -29,8 +33,24 @@ public class ClienteWithDemultiplexer {
         }
         return op;
     }
+    private static String lerString(String texto) {
+        Scanner is = new Scanner(System.in);
+        System.out.print(texto);
+        return is.nextLine();
+    }
 
     private static boolean login(){
+    	try  {
+            String user=lerString("Insira o username: ");
+            String pass=lerString("Insira a password: ");
+
+	        // send request
+	        c.send(1, "Ola".getBytes());
+	        // get reply
+	        byte[] f = c.receive(1);
+	        System.out.println("(1) Reply: " + new String(f));
+	    }  catch (Exception ignored) {}
+    	
     	System.out.println("Nao implementado");
     	return false;
     }
@@ -40,8 +60,8 @@ public class ClienteWithDemultiplexer {
     }
 
     public static void main(String[] args) throws Exception {
-        Socket s = new Socket("localhost", 12345);
-        Demultiplexer c = new Demultiplexer(new TaggedConnection(s));
+        s = new Socket("localhost", 12345);
+        c = new Demultiplexer(new TaggedConnection(s));
         c.start();
 
     	Scanner scin = new Scanner(System.in);
