@@ -124,4 +124,27 @@ public class AlarmeCovidLN {
         }
         return count;
     }
+
+    public void estaInfetado (String username) {
+        l.lock();
+        try {
+            Utilizador u = users.get(username);
+            u.lock();
+            u.setInfetado(true);
+            Collection<Utilizador> c = users.values();
+            for (Utilizador x : c) {
+                x.lock();
+                if (u.getContactos().contains(x.getUsername())) {
+                    try {
+                        x.setRisco();
+                    } finally {
+                        x.unlock();
+                    }
+                }
+            }
+            u.unlock();
+        } finally {
+            l.unlock();
+        }
+    }
 }
