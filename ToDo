@@ -28,4 +28,7 @@ Servidor:
 	- LN
 
 ToDo:
- -Criar logica de negócio no SV e etc.
+ - Informar que um utilizador ficou infetado
+ - Notificar todos os que estiveram nas mesmas localizações que ele
+ - Avisar um utilizador, quando uma localização estiver vazia
+ - Dar o mapa com as localizações vazias
