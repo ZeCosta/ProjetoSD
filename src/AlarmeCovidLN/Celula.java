@@ -1,5 +1,6 @@
 package src.AlarmeCovidLN;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
@@ -12,5 +13,25 @@ public class Celula {
     public Celula(){
         this.users = new TreeSet<>();
         this.l = new ReentrantLock();
+    }
+
+    public void addUser(String user){
+        users.add(user);
+    }
+
+    public void addAllUsers(Collection<String> users){
+        this.users.addAll(users);
+    }
+
+    public Collection<String> getUsers(){
+        return new ArrayList<>(users);
+    }
+
+    public void lock(){
+        l.lock();
+    }
+
+    public void unlock(){
+        l.unlock();
     }
 }
