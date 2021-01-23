@@ -9,6 +9,7 @@ public class Utilizador {
     private String username;
     private String password;
     private boolean infetado;
+    public boolean risco;
     private Localizacao lAtual;
     private boolean logged;
     private boolean temAutorizacao;
@@ -20,6 +21,7 @@ public class Utilizador {
         this.username = username;
         this.password = password;
         this.infetado = false;
+        this.risco = false;
         this.lAtual = new Localizacao(x, y);
         this.logged = false;
         this.temAutorizacao = temAutorizacao;
@@ -81,5 +83,13 @@ public class Utilizador {
 
     public void setTemAutorizacao(boolean temAutorizacao) {
         this.temAutorizacao = temAutorizacao;
+    }
+
+    public Collection getContactos () {
+        return new HashSet<>(this.contactos);
+    }
+
+    public void setRisco () {
+        this.risco = true;
     }
 }
