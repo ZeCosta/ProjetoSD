@@ -1,10 +1,12 @@
-//package g8;
+package src.Servidor;//package g8;
+
+import src.TaggedConnection;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 
-//import static g8.TaggedConnection.Frame;
-//import static TaggedConnection.Frame;
+//import static g8.src.TaggedConnection.Frame;
+//import static src.TaggedConnection.Frame;
 
 public class ServerWithWorkers {
     final static int WORKERS_PER_CONNECTION = 3;

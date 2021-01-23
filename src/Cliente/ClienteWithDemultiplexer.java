@@ -1,3 +1,8 @@
+package src.Cliente;
+
+import src.Demultiplexer;
+import src.TaggedConnection;
+
 import java.net.Socket;
 import java.util.Random;
 

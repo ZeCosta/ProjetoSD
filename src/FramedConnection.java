@@ -1,4 +1,4 @@
-//package g8;
+package src;//package g8;
 
 import java.net.Socket;
 import java.io.IOException;
