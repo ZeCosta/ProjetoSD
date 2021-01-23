@@ -27,6 +27,10 @@ LN:
 Servidor:
 	- LN
 
+Tags:	-0. Sair
+	-1. login
+	-2. register
+
 ToDo:
  - Informar que um utilizador ficou infetado
  - Notificar todos os que estiveram nas mesmas localizações que ele

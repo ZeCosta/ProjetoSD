@@ -9,13 +9,14 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class ClienteWithDemultiplexer {
-	private void apresentarMenuRL(){
+	private static void apresentarMenuRL(){
+		System.out.println("-------Menu RL-------");
 		System.out.println("0. Sair");
 		System.out.println("1. Login");
 		System.out.println("2. Register");
 	}
 
-	private int readOption() {
+	private static int readOption() {
         int op;
         Scanner is = new Scanner(System.in);
         System.out.print("Opção: ");
@@ -29,6 +30,15 @@ public class ClienteWithDemultiplexer {
         return op;
     }
 
+    private static boolean login(){
+    	System.out.println("Nao implementado");
+    	return false;
+    }
+
+    private static void register(){
+    	System.out.println("Nao implementado");
+    }
+
     public static void main(String[] args) throws Exception {
         Socket s = new Socket("localhost", 12345);
         Demultiplexer c = new Demultiplexer(new TaggedConnection(s));
@@ -40,22 +50,30 @@ public class ClienteWithDemultiplexer {
         int op=-1;
         boolean loggedin=false;
 
-        while(op!=0 || !loggedin){
+        while(op!=0 && !loggedin){
         	apresentarMenuRL();
         	op=readOption();
 
         	switch(op){
         		case 0:
         			System.out.println("A sair");
+        			break;
         		case 1:
         			System.out.println("Login...");
+        			loggedin=login();
         			//login
+        			break;
         		case 2:
         			System.out.println("Register...");
+        			register();
         			//regitar
+        			break;
         		default:
         			System.out.println("Erro na escolha");
+        			break;
         	}
+
+        	System.out.println();
         }
 
         if(loggedin){
