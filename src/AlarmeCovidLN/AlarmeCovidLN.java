@@ -133,8 +133,8 @@ public class AlarmeCovidLN {
             u.setInfetado(true);
             Collection<Utilizador> c = users.values();
             for (Utilizador x : c) {
+                x.lock();
                 if (u.getContactos().contains(x.getUsername())) {
-                    x.lock();
                     try {
                         x.setRisco();
                     } finally {
@@ -142,8 +142,8 @@ public class AlarmeCovidLN {
                     }
                 }
             }
+            u.unlock();
         } finally {
-
             l.unlock();
         }
     }
