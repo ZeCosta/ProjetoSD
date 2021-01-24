@@ -13,7 +13,7 @@ public class Utilizador {
     public boolean risco;
     private Localizacao lAtual;
     private boolean logged;
-    private boolean temAutorizacao;
+    private boolean autorizado;
     private Collection<String> contactos; /* Contactos desde sempre */
     public Lock ul;
 
@@ -25,7 +25,7 @@ public class Utilizador {
         this.risco = false;
         this.lAtual = new Localizacao(x, y);
         this.logged = false;
-        this.temAutorizacao = temAutorizacao;
+        this.autorizado = temAutorizacao;
         this.contactos = new HashSet<>();
         this.ul = new ReentrantLock();
     }
@@ -86,12 +86,12 @@ public class Utilizador {
         this.logged = logged;
     }
 
-    public boolean isTemAutorizacao() {
-        return temAutorizacao;
+    public boolean isAutorizado() {
+        return autorizado;
     }
 
-    public void setTemAutorizacao(boolean temAutorizacao) {
-        this.temAutorizacao = temAutorizacao;
+    public void setAutorizado(boolean autorizado) {
+        this.autorizado = autorizado;
     }
 
     public Collection<String> getContactos () {
@@ -110,7 +110,7 @@ public class Utilizador {
         return infetado == that.infetado &&
                 risco == that.risco &&
                 logged == that.logged &&
-                temAutorizacao == that.temAutorizacao &&
+                autorizado == that.autorizado &&
                 Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(lAtual, that.lAtual) &&

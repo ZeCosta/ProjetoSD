@@ -111,7 +111,8 @@ public class AlarmeCovidLN {
      * @param password
      * @return true se for feito com sucesso, false caso contrário
      */
-    public boolean login(String username, String password) {
+    public boolean[] login(String username, String password) {
+        boolean[] res = new boolean[2];
         l.lock();
         try {
             Utilizador u = users.get(username);
@@ -123,14 +124,13 @@ public class AlarmeCovidLN {
                 } finally {
                     u.unlock();
                 }
-                return true;
-            }
-            else {
-                return false;
+                res[0] = true;
+                res[1] = u.isAutorizado();
             }
         } finally {
             l.unlock();
         }
+        return res;
     }
 
     /**
