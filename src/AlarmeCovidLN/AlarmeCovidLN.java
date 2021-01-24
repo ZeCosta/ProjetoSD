@@ -8,7 +8,7 @@ import java.util.concurrent.locks.Lock;
 public class AlarmeCovidLN {
     private Map<String, Utilizador> users;
     private int N;
-    private final Celula[][] mapa; /* Mapa que guarda quem já esteve em cada localização */
+    private final Celula[][] mapa; /* Mapa que guarda quem está em cada localização */
     private Lock l;
 
     public AlarmeCovidLN(int N){
@@ -17,25 +17,62 @@ public class AlarmeCovidLN {
         this.mapa = new Celula[N][N];
     }
 
-    public Collection<String> getContactos(Localizacao loc){
-        int x = loc.getX();
-        int y = loc.getY();
-        Collection<String> res;
+    /**
+     * Devolve o número de pessoas a ocupar uma localização no momento atual
+     * @param x coordenada x
+     * @param y coordenada y
+     * @return inteiro
+     */
+    public int getOcupacao(int x, int y){
+        Celula c = mapa[x][y];
+        if(c != null){
+            c.lock();
+            try{
+                return c.getUsers().size();
+            } finally {
+                c.unlock();
+            }
+        }
+        else
+            return 0;
+    }
 
+    /**
+     * Devolve o mapa com as ocupações
+     * @return matriz de inteiros (cada localização tem uma quantidade de pessoas associada)
+     */
+    public int[][] getOcupacoes(){
+        int x, y;
+        int[][] res = new int[N][N];
         l.lock();
         try{
-            Celula c = mapa[x][y];
-            c.lock();
-            res = c.getUsers();
-            c.unlock();
+            //Dar lock
+            for(x = 0; x <N; x++)
+                for(y = 0; y < N; y++)
+                    mapa[x][y].lock();
+
+            l.unlock();
+
+                //Obter ocupacao
+            for(x = 0; x <N; x++)
+                for(y = 0; y < N; y++)
+                    res[x][y] = getOcupacao(x,y);
+
+                //Dar unlock
+            for(x = 0; x <N; x++)
+                for(y = 0; y < N; y++)
+                    mapa[x][y].unlock();
+
             return res;
-        }finally {
+        } finally {
             l.unlock();
         }
     }
 
     /**
-     * Verificar se existe um utilizador registado
+     * Verifica se um utilizador está registado
+     * @param username
+     * @return true se sim
      */
     public boolean estaRegistado(String username){
         l.lock();
@@ -47,7 +84,11 @@ public class AlarmeCovidLN {
     }
 
     /**
-     * Registar um utilizador
+     * Regista um utilizador
+     * @param username
+     * @param password
+     * @param autorizacao autorização especial para transferir o mapa das ocupações
+     * @return true se for registado com sucesso
      */
     public boolean registar(String username, String password, boolean autorizacao){
         if(estaRegistado(username))
@@ -66,6 +107,9 @@ public class AlarmeCovidLN {
 
     /**
      * Fazer login
+     * @param username
+     * @param password
+     * @return true se for feito com sucesso, false caso contrário
      */
     public boolean login(String username, String password) {
         l.lock();
@@ -110,6 +154,8 @@ public class AlarmeCovidLN {
                     for(Utilizador ut: us)
                         if(ut.getlAtual().equals(loc) && !ut.equals(u))
                             ut.lock();
+
+                    l.unlock();
 
                     for(Utilizador ut: us)
                         if(ut.getlAtual().equals(loc) && !ut.equals(u)) {
@@ -168,22 +214,27 @@ public class AlarmeCovidLN {
         return count;
     }
 
+    /**
+     * Marca um utilizador como infetado, e adiciona os seus contactos ao grupo de risco
+     * @param username username do infetado
+     */
     public void estaInfetado (String username) {
         l.lock();
         try {
             Utilizador u = users.get(username);
             u.lock();
             u.setInfetado(true);
-            Collection<Utilizador> c = users.values();
-            for (Utilizador x : c)
-                x.lock();
+            Collection<String> c = u.getContactos();
+            for(String x : c)
+                users.get(x).lock();
 
-            for(Utilizador x: c)
-                if (u.getContactos().contains(x.getUsername()))
-                    x.setRisco();
+            l.unlock();
 
-            for(Utilizador x: c)
-                x.unlock();
+            for(String x: c)
+                users.get(x).setRisco();
+
+            for(String x: c)
+                users.get(x).unlock();
 
             u.unlock();
         } finally {
