@@ -122,11 +122,11 @@ public class AlarmeCovidLN {
                 l.unlock();
                 try {
                     u.setLogged(true);
+                    res[0] = true;
+                    res[1] = u.isAutorizado();
                 } finally {
                     u.unlock();
                 }
-                res[0] = true;
-                res[1] = u.isAutorizado();
             }
         } finally {
             l.unlock();
