@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class AlarmeCovidLN {
     private Map<String, Utilizador> users;
     private int N;
-    private final Celula[][] mapa; /* Mapa que guarda quem está em cada localização */
+    private final Celula[][] mapa; /* Mapa que guarda quem esteve em cada localização */
     private Lock l;
 
     public AlarmeCovidLN(int N){
@@ -26,17 +26,26 @@ public class AlarmeCovidLN {
      * @return inteiro
      */
     public int getOcupacao(int x, int y){
-        Celula c = mapa[x][y];
-        if(c != null){
-            c.lock();
-            try{
-                return c.getUsers().size();
-            } finally {
-                c.unlock();
-            }
+        l.lock();
+        int res = 0;
+        Localizacao loc = new Localizacao(x,y);
+        try {
+            Collection<Utilizador> us = users.values();
+            for(Utilizador u: us)
+                u.lock();
+
+            l.unlock();
+
+            for(Utilizador u: us)
+                if(u.getlAtual().equals(loc)) res++;
+
+            for(Utilizador u: us)
+                u.unlock();
+
+            return res;
+        } finally {
+            l.unlock();
         }
-        else
-            return 0;
     }
 
     /**
@@ -99,10 +108,10 @@ public class AlarmeCovidLN {
             try{
                 this.users.put(username, new Utilizador(username, password,
                         false,-1,-1));
+                return true;
             }finally {
                 l.unlock();
             }
-            return true;
         }
     }
 
@@ -128,10 +137,10 @@ public class AlarmeCovidLN {
                     u.unlock();
                 }
             }
+            return res;
         } finally {
             l.unlock();
         }
-        return res;
     }
 
     /**

@@ -11,6 +11,8 @@ Funcionamento do projeto:
 
  -No servidor separar a Logica de negócio e parte do servidor
 
+ -Fechar quando há ioexception
+
 Utilizador:
 	- Username
 	- Password (hashed)
@@ -25,6 +27,9 @@ LN:
 	- Mapa de String(username) para Utilizador
 	- Matriz de coleção de string
 	- tem lock
+	- Mapa contem celulas com as pessoas que ja estiveram la
+	- Para ter o numero de pessoas numa localizacao atualmente percorremos os utilizadores todos e
+	preenchemos uma matriz
 
 Servidor:
 	- LN
