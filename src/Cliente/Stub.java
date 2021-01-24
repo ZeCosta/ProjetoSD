@@ -58,9 +58,9 @@ public class Stub{
 	   
 	        out.flush();
 
-            boolean b[] = new boolean[2];
-	        b[1] = in.readBoolean();
-            if(b[1]) b[2] = in.readBoolean();
+            boolean[] b = new boolean[2];
+	        b[0] = in.readBoolean();
+            if(b[0]) b[1] = in.readBoolean();
 
 	       	return b;
     	}catch(Exception e){

@@ -46,19 +46,19 @@ public class ClienteSimples {
     	//System.out.println("Nao implementado");
         String user=lerString("Insira o username: ");
         String pass=lerString("Insira a password: ");
-        boolean b[];
+        boolean[] b;
 
         try{
 		    // send request
 		    b = stub.login(user,pass);
 
-		    if(!b[1]) System.out.println("Erro no login");
+		    if(!b[0]) System.out.println("Erro no login");
 		    else{
                 System.out.println("Login bem sucedido");
-                permicoes=b[2];
+                permicoes=b[1];
             } 
 
-	       return b[1];
+	       return b[0];
         }catch(Exception e){
          	System.out.println("Erro: "+e);
          	return false;
