@@ -13,7 +13,7 @@ public class ClienteSimples {
 	private static Socket s;
     private static Demultiplexer c;
     private static Stub stub;
-    private static boolean permicoes;
+    private static boolean permicao;
 
 	private static void apresentarMenuRL(){
 		System.out.println("-------Menu RL-------");
@@ -21,6 +21,18 @@ public class ClienteSimples {
 		System.out.println("1. Login");
 		System.out.println("2. Register");
 	}
+    private static void apresentarMenuLog(){
+        System.out.println("-------Menu Login-------");
+        System.out.println("0. Sair");
+        System.out.println("1. Comunicar Localização Atual");
+        System.out.println("2. Verificar ocupação de uma Localizacao");
+        System.out.println("3. Imprimir Mapa de ocupaçoes e doentes");
+        if(permicao){
+            System.out.println("(tem_permicao)");
+        }else{
+            System.out.println("(nao_tem_permicao)");
+        }
+    }
 
 	private static int readOption() {
         int op;
@@ -55,7 +67,7 @@ public class ClienteSimples {
 		    if(!b[0]) System.out.println("Erro no login");
 		    else{
                 System.out.println("Login bem sucedido");
-                permicoes=b[1];
+                permicao=b[1];
             } 
 
 	       return b[0];
@@ -77,6 +89,7 @@ public class ClienteSimples {
 		    b = stub.register(user,pass);
 		    if(!b) System.out.println("Erro no registo");
 		    else System.out.println("Registo bem sucedido");
+
         }catch(Exception e){
          	System.out.println("Erro: "+e);
         }
@@ -113,9 +126,8 @@ public class ClienteSimples {
         			loggedin=login();
         			break;
         		case 2:
-        			System.out.println("Register...");
+                    System.out.println("Register...");
         			register();
-        			//regitar
         			break;
         		default:
         			System.out.println("Erro na escolha");
@@ -127,6 +139,34 @@ public class ClienteSimples {
 
         if(loggedin){
         	//fazer cenas
+            while(op!=0){
+                apresentarMenuRL();
+                op=readOption();
+
+                switch(op){
+                    case 0:
+                        System.out.println("A sair");
+                        break;
+                    case 1:
+                        System.out.println("Comunicar Localização Atual");
+                        break;
+                    case 2:
+                        System.out.println("Verificar ocupação de uma Localizacao");
+                        break;
+                    case 3:
+                        System.out.println("Imprimir Mapa de ocupaçoes e doentes");
+                        if(permicao){
+                            System.out.println("Tem premicao");
+                        }
+                        else{
+                           System.out.println("Não tem premicao");
+                        }
+                        break;
+                    default:
+                        System.out.println("Erro na escolha");
+                        break;
+                }
+            }
         }
 
         /*

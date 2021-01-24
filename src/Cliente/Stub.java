@@ -17,37 +17,39 @@ public class Stub{
            
     }
 
-    public void run(){
-        try {
-            BufferedReader systemin = new BufferedReader(new InputStreamReader(System.in));
+    /*
+        public void run(){
+            try {
+                BufferedReader systemin = new BufferedReader(new InputStreamReader(System.in));
 
-            int tag;
-            String input = null;
+                int tag;
+                String input = null;
 
-            while((input = systemin.readLine()) != null){
-                tag =  Integer.parseInt(input);
-                /* Primeiro inteiro é a etiqueta da operação */
-                out.writeInt(tag);
-                switch(tag){
-                    case 0: /* 0 -> registar utilizador */
-                    case 1: /* 1 -> autenticar */
-                        out.writeUTF(systemin.readLine()); /* Username */
-                        out.writeUTF(systemin.readLine()); /* Password */
-                        break;
+                while((input = systemin.readLine()) != null){
+                    tag =  Integer.parseInt(input);
+                    
+                    out.writeInt(tag);
+                    switch(tag){
+                        case 0: // 0 -> registar utilizador 
+                        case 1: //)) 1 -> autenticar 
+                            out.writeUTF(systemin.readLine()); // Username 
+                            out.writeUTF(systemin.readLine()); // Password 
+                            break;
+                    }
+                    out.flush();
                 }
+
+                out.writeInt(-1); // Não vai escrever mais nada 
                 out.flush();
+
+                s.shutdownOutput();
+                s.shutdownInput();
+                s.close();
+            } catch(IOException e){
+                e.printStackTrace();
             }
-
-            out.writeInt(-1); /* Não vai escrever mais nada */
-            out.flush();
-
-            s.shutdownOutput();
-            s.shutdownInput();
-            s.close();
-        } catch(IOException e){
-            e.printStackTrace();
         }
-    }
+    */
 
     public boolean[] login(String user, String pass) throws Exception{
     	try{
