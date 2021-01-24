@@ -1,4 +1,6 @@
 Funcionamento do projeto:
+ -> cada resposta envia sempre um boolean primeiro a dizer se o pedido foi bem sucedido ou nao!
+
  -cliente faz login
  -projeto uma thread para perguntar se esta em risco (ou sleeps ou fica a espera de resposta)
  -outra thread(acho que nem precisa de ser uma thread) que tem o menu com as opçoes
