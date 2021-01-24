@@ -77,9 +77,7 @@ public class Stub{
 	   
 	        out.flush();
 
-	       	Boolean b = in.readBoolean();
-
-	       	return b;
+	       	return in.readBoolean();
     	}catch(Exception e){
     		throw e;
     	}
