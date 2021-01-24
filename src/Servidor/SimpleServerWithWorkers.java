@@ -32,7 +32,10 @@ public class SimpleServerWithWorkers {
                                 System.out.println(user + "->" + pass);
 
                                 out.writeUTF("2");
-                                out.flush();
+
+                                System.out.println("cenas");
+                                out.flush(); 
+                                System.out.println("coiso");                               System.out.println(user + "->" + pass);
 
                                 break;
                             default:
