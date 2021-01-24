@@ -60,7 +60,7 @@ public class Stub{
 
 	        System.out.println("teste");
 
-	       	String b = in.readUTF();
+	       	boolean b = in.readBoolean();
 	       	System.out.println(b);
 	       	return false;
     	}catch(Exception e){
