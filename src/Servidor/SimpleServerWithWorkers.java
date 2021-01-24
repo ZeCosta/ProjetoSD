@@ -29,9 +29,8 @@ public class SimpleServerWithWorkers {
                                 System.out.println("Login");
                                 String user = in.readUTF();
                                 String pass = in.readUTF();
-                                
                                 System.out.println(user + "->" + pass);
-                                
+
                                 out.writeUTF("2");
                                 out.flush();
 
@@ -48,7 +47,7 @@ public class SimpleServerWithWorkers {
                     }
 
                 }catch(Exception e){
-                    System.out.println("Erro");
+                    e.printStackTrace();
                 }
                 
             };
