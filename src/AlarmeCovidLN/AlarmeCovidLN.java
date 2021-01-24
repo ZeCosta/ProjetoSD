@@ -1,8 +1,6 @@
 package src.AlarmeCovidLN;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -47,13 +45,32 @@ public class AlarmeCovidLN {
         }
     }
 
+    public int numElemsIguais(Collection<String> a, Collection<String> b){
+        int res = 0;
+        for(String s1: a)
+            for(String s2: b)
+                if(s1.equals(s2))
+                    res++;
+        return res;
+    }
+
+    public Collection<String> getInfetados(){
+        Collection<String> res = new TreeSet<>();
+        //Não é preciso dar lock porque a função é usada dentro de um bloco que tem lock
+        for(Utilizador u: users.values())
+            if(u.isInfetado())
+                res.add(u.getUsername());
+        return res;
+    }
+
     /**
      * Devolve o mapa com as ocupações
      * @return matriz de inteiros (cada localização tem uma quantidade de pessoas associada)
      */
-    public int[][] getOcupacoes(){
-        int x, y;
-        int[][] res = new int[N][N];
+    public int[][][] getOcupacoes(){
+        int[][][] res = new int[N][N][2];
+        int x,y;
+
         l.lock();
         try{
             //Dar lock
@@ -61,12 +78,16 @@ public class AlarmeCovidLN {
                 for(y = 0; y < N; y++)
                     mapa[x][y].lock();
 
+            Collection<String> infetados = getInfetados();
+
             l.unlock();
 
                 //Obter ocupacao
             for(x = 0; x <N; x++)
-                for(y = 0; y < N; y++)
-                    res[x][y] = getOcupacao(x,y);
+                for(y = 0; y < N; y++) {
+                    res[x][y][0] = mapa[x][y].getUsers().size();
+                    res[x][y][1] = numElemsIguais(mapa[x][y].getUsers(),infetados);
+                }
 
                 //Dar unlock
             for(x = 0; x <N; x++)
@@ -100,17 +121,17 @@ public class AlarmeCovidLN {
      * @return true se for registado com sucesso
      */
     public boolean registar(String username, String password){
+        l.lock();
+        try{
         if(estaRegistado(username))
             return false;
         else{
-            l.lock();
-            try{
                 this.users.put(username, new Utilizador(username, password,
                         false,-1,-1));
                 return true;
-            }finally {
-                l.unlock();
             }
+        } finally {
+            l.unlock();
         }
     }
 
@@ -125,18 +146,21 @@ public class AlarmeCovidLN {
         l.lock();
         try {
             Utilizador u = users.get(username);
-            if ( u != null && password.equals(u.getPassword()) && !u.isLogged()) {
-                u.lock();
-                l.unlock();
-                try {
+            if(u == null) {
+                return res;
+            }
+            u.lock();
+            l.unlock();
+            try {
+                if (password.equals(u.getPassword()) && !u.isLogged()) {
                     u.setLogged(true);
                     res[0] = true;
                     res[1] = u.isAutorizado();
-                } finally {
-                    u.unlock();
                 }
+                return res;
+            } finally {
+                u.unlock();
             }
-            return res;
         } finally {
             l.unlock();
         }
@@ -199,22 +223,20 @@ public class AlarmeCovidLN {
     public void estaInfetado (String username) {
         l.lock();
         try {
+            Collection<Utilizador> us = users.values();
             Utilizador u = users.get(username);
-            u.lock();
-            u.setInfetado(true);
-            Collection<String> c = u.getContactos();
-            for(String x : c)
-                users.get(x).lock();
+            for(Utilizador ut : us)
+                ut.lock();
 
             l.unlock();
 
-            for(String x: c)
-                users.get(x).setRisco();
+            u.setInfetado(true);
+            Collection<String> cs = u.getContactos();
+            for(String c: cs)
+                users.get(c).setRisco();
 
-            for(String x: c)
-                users.get(x).unlock();
-
-            u.unlock();
+            for(Utilizador ut: us)
+                ut.unlock();
         } finally {
             l.unlock();
         }
