@@ -31,8 +31,25 @@ Servidor:
 
 Tags:	-0. Sair
 	-1. login
+	    - envia: tag, username, password
+	    - recebe: booleano (sucesso ou nao), se for sucedido recebe outro booleano (tem permissao especial ou nao)
 	-2. register
+	    - envia: tag, username, password
+	    - recebe: booleano (sucesso)
+	-3. comunicar localizacao atual
+	    - envia: tag, username, coordenadas x e y
+	    - recebe: booleano(sucesso)
+	-4. verificar ocupação de uma localização
+	    - envia: tag, coordenadas x e y
+	    - recebe: int
+	-5. verificar mapa com as ocupações de todas as localizações
+	    - envia: tag
+	    - recebe: matriz de inteiros
+	-6. comunicar que está infetado
+	    - envia: tag, username
+	    - recebe: sucesso?
 
 ToDo:
  - Notificar todos os que estiveram nas mesmas localizações que ele
  - Avisar um utilizador, quando uma localização estiver vazia
+

@@ -1,5 +1,6 @@
 package src.Servidor;//package g8;
 
+import src.AlarmeCovidLN.AlarmeCovidLN;
 import src.TaggedConnection;
 
 import java.net.ServerSocket;
@@ -13,6 +14,7 @@ public class SimpleServerWithWorkers {
     //final static int WORKERS_PER_CONNECTION = 3;
 
     public static void main(String[] args) throws Exception {
+        AlarmeCovidLN ac = new AlarmeCovidLN(10);
         ServerSocket ss = new ServerSocket(12345);
 
         while(true) {
@@ -29,7 +31,7 @@ public class SimpleServerWithWorkers {
                                 System.out.println("Login");
                                 String user = in.readUTF();
                                 String pass = in.readUTF();
-                                System.out.println(user + "->" + pass);
+                                //System.out.println(user + "->" + pass);
 
                                 out.writeBoolean(false);
                                 out.writeBoolean(false);
