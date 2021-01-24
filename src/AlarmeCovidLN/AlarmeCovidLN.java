@@ -17,6 +17,23 @@ public class AlarmeCovidLN {
         this.mapa = new Celula[N][N];
     }
 
+    public Collection<String> getContactos(Localizacao loc){
+        int x = loc.getX();
+        int y = loc.getY();
+        Collection<String> res;
+
+        l.lock();
+        try{
+            Celula c = mapa[x][y];
+            c.lock();
+            res = c.getUsers();
+            c.unlock();
+            return res;
+        }finally {
+            l.unlock();
+        }
+    }
+
     /**
      * Verificar se existe um utilizador registado
      */
@@ -83,10 +100,36 @@ public class AlarmeCovidLN {
         try{
             Utilizador u = users.get(user);
             if(u != null){
+                Localizacao loc = new Localizacao(x,y);
                 u.lock();
-                l.unlock();
                 try{
-                    u.setlAtual(new Localizacao(x,y));
+                    u.setlAtual(loc);
+                    // 1.Adicionar pessoas desta localizacao nos contactos do u
+                    // 2.Adicionar o u como contacto das restantes pessoas
+                    Collection<Utilizador> us = users.values();
+                    for(Utilizador ut: us)
+                        if(ut.getlAtual().equals(loc) && !ut.equals(u))
+                            ut.lock();
+
+                    for(Utilizador ut: us)
+                        if(ut.getlAtual().equals(loc) && !ut.equals(u)) {
+                            u.addContacto(ut.getUsername());
+                            ut.addContacto(user);
+                        }
+
+                    for(Utilizador ut: us)
+                        if(ut.getlAtual().equals(loc) && !ut.equals(u))
+                            ut.unlock();
+
+                    // 3.Adicionar este utilizador ao mapa
+                    Celula cel = mapa[x][y];
+                    if(cel == null)
+                        cel = new Celula();
+                    cel.lock();
+                    cel.addUser(user);
+                    mapa[x][y] = cel;
+                    cel.unlock();
+
                 } finally {
                     u.unlock();
                 }
@@ -132,16 +175,16 @@ public class AlarmeCovidLN {
             u.lock();
             u.setInfetado(true);
             Collection<Utilizador> c = users.values();
-            for (Utilizador x : c) {
+            for (Utilizador x : c)
                 x.lock();
-                if (u.getContactos().contains(x.getUsername())) {
-                    try {
-                        x.setRisco();
-                    } finally {
-                        x.unlock();
-                    }
-                }
-            }
+
+            for(Utilizador x: c)
+                if (u.getContactos().contains(x.getUsername()))
+                    x.setRisco();
+
+            for(Utilizador x: c)
+                x.unlock();
+
             u.unlock();
         } finally {
             l.unlock();

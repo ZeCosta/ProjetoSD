@@ -2,6 +2,7 @@ package src.AlarmeCovidLN;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -27,6 +28,14 @@ public class Utilizador {
         this.temAutorizacao = temAutorizacao;
         this.contactos = new HashSet<>();
         this.ul = new ReentrantLock();
+    }
+
+    public void addContacto(String c){
+        contactos.add(c);
+    }
+
+    public void addContactos(Collection<String> cs){
+        contactos.addAll(cs);
     }
 
     public boolean estaNumaLocalizacao(Localizacao l){
@@ -85,11 +94,27 @@ public class Utilizador {
         this.temAutorizacao = temAutorizacao;
     }
 
-    public Collection getContactos () {
+    public Collection<String> getContactos () {
         return new HashSet<>(this.contactos);
     }
 
     public void setRisco () {
         this.risco = true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Utilizador that = (Utilizador) o;
+        return infetado == that.infetado &&
+                risco == that.risco &&
+                logged == that.logged &&
+                temAutorizacao == that.temAutorizacao &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(lAtual, that.lAtual) &&
+                Objects.equals(contactos, that.contactos) &&
+                Objects.equals(ul, that.ul);
     }
 }
