@@ -45,7 +45,7 @@ public class ClienteSimples {
     	//System.out.println("Nao implementado");
         String user=lerString("Insira o username: ");
         String pass=lerString("Insira a password: ");
-        Boolean b;
+        boolean b;
 
         try{
 		    // send request
@@ -64,7 +64,7 @@ public class ClienteSimples {
     	//System.out.println("Nao implementado");
     	String user=lerString("Escolha o username: ");
         String pass=lerString("Escolha a password: ");
-        Boolean b;
+        boolean b;
 
         try{
 		    // send request
