@@ -32,7 +32,7 @@ public class SimpleServerWithWorkers {
                                 
                                 System.out.println(user + "->" + pass);
                                 
-                                out.writeBoolean(false);
+                                out.writeUTF("2");
                                 out.flush();
 
                                 break;

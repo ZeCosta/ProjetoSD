@@ -60,9 +60,9 @@ public class Stub{
 
 	        System.out.println("teste");
 
-	       	boolean b = in.readBoolean();
+	       	String b = in.readUTF();
 	       	System.out.println(b);
-	       	return b;
+	       	return false;
     	}catch(Exception e){
     		throw e;
     	}
