@@ -49,7 +49,7 @@ public class Stub{
         }
     }
 
-    public boolean login(String user, String pass) throws Exception{
+    public boolean[] login(String user, String pass) throws Exception{
     	try{
 	    	out.writeInt(1);
 
@@ -58,11 +58,11 @@ public class Stub{
 	   
 	        out.flush();
 
-	        System.out.println("teste");
+            boolean b[] = new boolean[2];
+	        b[1] = in.readBoolean();
+            if(b[1]) b[2] = in.readBoolean();
 
-	       	boolean b = in.readBoolean();
-	       	System.out.println(b);
-	       	return false;
+	       	return b;
     	}catch(Exception e){
     		throw e;
     	}

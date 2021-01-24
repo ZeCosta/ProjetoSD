@@ -31,11 +31,10 @@ public class SimpleServerWithWorkers {
                                 String pass = in.readUTF();
                                 System.out.println(user + "->" + pass);
 
-                                out.writeUTF("2");
+                                out.writeBoolean(false);
+                                out.writeBoolean(false);
 
-                                System.out.println("cenas");
-                                out.flush(); 
-                                System.out.println("coiso");                               System.out.println(user + "->" + pass);
+                                out.flush();                               
 
                                 break;
                             default:

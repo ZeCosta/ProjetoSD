@@ -13,6 +13,7 @@ public class ClienteSimples {
 	private static Socket s;
     private static Demultiplexer c;
     private static Stub stub;
+    private static boolean permicoes;
 
 	private static void apresentarMenuRL(){
 		System.out.println("-------Menu RL-------");
@@ -45,20 +46,24 @@ public class ClienteSimples {
     	//System.out.println("Nao implementado");
         String user=lerString("Insira o username: ");
         String pass=lerString("Insira a password: ");
-        boolean b;
+        boolean b[];
 
         try{
 		    // send request
 		    b = stub.login(user,pass);
-		    System.out.println("Cheguei aqui");
-		    if(!b) System.out.println("Erro no login");
-		    else System.out.println("Login bem sucedido");
+
+		    if(!b[1]) System.out.println("Erro no login");
+		    else{
+                System.out.println("Login bem sucedido");
+                permicoes=b[2];
+            } 
+
+	       return b[1];
         }catch(Exception e){
          	System.out.println("Erro: "+e);
-         	b=false;
+         	return false;
         }
 
-	    return b;
     }
 
     private static void register(){
