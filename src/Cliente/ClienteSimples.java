@@ -50,6 +50,7 @@ public class ClienteSimples {
         try{
 		    // send request
 		    b = stub.login(user,pass);
+		    System.out.println("Cheguei aqui");
 		    if(!b) System.out.println("Erro no login");
 		    else System.out.println("Login bem sucedido");
         }catch(Exception e){

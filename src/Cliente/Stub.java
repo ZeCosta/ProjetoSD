@@ -58,8 +58,10 @@ public class Stub{
 	   
 	        out.flush();
 
-	       	Boolean b = in.readBoolean();
+	        System.out.println("teste");
 
+	       	boolean b = in.readBoolean();
+	       	System.out.println(b);
 	       	return b;
     	}catch(Exception e){
     		throw e;
