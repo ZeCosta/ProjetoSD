@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class AlarmeCovidLN {
     private Map<String, Utilizador> users;
     private int N;
-    private final Celula[][] mapa; /* Mapa que guarda quem esteve em cada localização */
+    private final Celula[][] mapa; /* Mapa que guarda quem esteve ou está em cada localização */
     private Lock l;
 
     public AlarmeCovidLN(int N){
@@ -37,11 +37,10 @@ public class AlarmeCovidLN {
             l.unlock();
 
             for(Utilizador u: us)
-                if(u.getlAtual().equals(loc)) res++;
-
-            for(Utilizador u: us)
-                u.unlock();
-
+                if(u.getlAtual().equals(loc)) {
+                    res++;
+                    u.unlock();
+                }
             return res;
         } finally {
             l.unlock();
@@ -155,17 +154,21 @@ public class AlarmeCovidLN {
             Utilizador u = users.get(user);
             if(u != null){
                 Localizacao loc = new Localizacao(x,y);
-                u.lock();
                 try{
-                    u.setlAtual(loc);
                     // 1.Adicionar pessoas desta localizacao nos contactos do u
                     // 2.Adicionar o u como contacto das restantes pessoas
                     Collection<Utilizador> us = users.values();
                     for(Utilizador ut: us)
-                        if(ut.getlAtual().equals(loc) && !ut.equals(u))
-                            ut.lock();
+                        ut.lock();
+
+                    Celula cel = mapa[x][y];
+                    if(cel == null)
+                        mapa[x][y] = new Celula();
+                    mapa[x][y].lock();
 
                     l.unlock();
+
+                    u.setlAtual(loc);
 
                     for(Utilizador ut: us)
                         if(ut.getlAtual().equals(loc) && !ut.equals(u)) {
@@ -174,17 +177,11 @@ public class AlarmeCovidLN {
                         }
 
                     for(Utilizador ut: us)
-                        if(ut.getlAtual().equals(loc) && !ut.equals(u))
-                            ut.unlock();
+                        ut.unlock();
 
                     // 3.Adicionar este utilizador ao mapa
-                    Celula cel = mapa[x][y];
-                    if(cel == null)
-                        cel = new Celula();
-                    cel.lock();
-                    cel.addUser(user);
-                    mapa[x][y] = cel;
-                    cel.unlock();
+                    mapa[x][y].addUser(user);
+                    mapa[x][y].unlock();
 
                 } finally {
                     u.unlock();
