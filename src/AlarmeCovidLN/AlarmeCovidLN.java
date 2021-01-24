@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AlarmeCovidLN {
     private Map<String, Utilizador> users;
@@ -15,6 +16,7 @@ public class AlarmeCovidLN {
         this.N = N;
         this.users = new HashMap<>();
         this.mapa = new Celula[N][N];
+        this.l = new ReentrantLock();
     }
 
     /**
