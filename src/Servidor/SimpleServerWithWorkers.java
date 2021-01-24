@@ -28,16 +28,18 @@ public class SimpleServerWithWorkers {
                         int tag = in.readInt();
                         switch(tag){
                             case 1:
+                                boolean[] bs;
                                 System.out.println("Login");
                                 String user = in.readUTF();
                                 String pass = in.readUTF();
                                 //System.out.println(user + "->" + pass);
+                                bs = ac.login(user, pass);
 
-                                out.writeBoolean(false);
-                                out.writeBoolean(false);
+                                out.writeBoolean(bs[0]);
+                                if(bs[0])
+                                    out.writeBoolean(bs[1]);
 
-                                out.flush();                               
-
+                                out.flush();
                                 break;
                             default:
                                 System.out.println("Opção " + tag + "não implementada");
