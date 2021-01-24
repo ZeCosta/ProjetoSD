@@ -33,6 +33,7 @@ public class ClienteWithDemultiplexer {
         }
         return op;
     }
+    
     private static String lerString(String texto) {
         Scanner is = new Scanner(System.in);
         System.out.print(texto);
