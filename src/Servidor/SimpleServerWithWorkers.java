@@ -1,4 +1,4 @@
-package src.Servidor;//package g8;
+package src.Servidor;
 
 import src.AlarmeCovidLN.AlarmeCovidLN;
 import src.TaggedConnection;
@@ -7,14 +7,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.*;
 
-//import static g8.src.TaggedConnection.Frame;
-//import static src.TaggedConnection.Frame;
-
 public class SimpleServerWithWorkers {
-    //final static int WORKERS_PER_CONNECTION = 3;
 
     public static void main(String[] args) throws Exception {
-        AlarmeCovidLN ac = new AlarmeCovidLN(10);
+        AlarmeCovidLN ac = new AlarmeCovidLN(10); /* Damos como argumento o tamanho do mapa (NxN) */
         ServerSocket ss = new ServerSocket(12345);
 
         while(true) {
@@ -26,19 +22,61 @@ public class SimpleServerWithWorkers {
                 try{
                     for (;;) {
                         int tag = in.readInt();
+                        String user, pass;
+                        int x,y;
                         switch(tag){
                             case 1:
                                 boolean[] bs;
                                 System.out.println("Login");
-                                String user = in.readUTF();
-                                String pass = in.readUTF();
-                                //System.out.println(user + "->" + pass);
+                                user = in.readUTF();
+                                pass = in.readUTF();
                                 bs = ac.login(user, pass);
 
                                 out.writeBoolean(bs[0]);
                                 if(bs[0])
                                     out.writeBoolean(bs[1]);
 
+                                out.flush();
+                                break;
+                            case 2:
+                                System.out.println("Registar");
+                                user = in.readUTF();
+                                pass = in.readUTF();
+                                out.writeBoolean(ac.registar(user, pass));
+                                out.flush();
+                                break;
+                            case 3:
+                                System.out.println("Comunicar localização");
+                                user = in.readUTF();
+                                x = in.readInt();
+                                y = in.readInt();
+                                ac.comunicarLocalizacao(user, x, y);
+                                out.writeBoolean(true);
+                                out.flush();
+                                break;
+                            case 4:
+                                System.out.println("Quantidade de pessoas numa localização");
+                                x = in.readInt();
+                                y = in.readInt();
+                                out.writeInt(ac.getOcupacao(x,y));
+                                out.flush();
+                                break;
+                            case 5:
+                                System.out.println("Mapa com o nº de pessoas em cada localização");
+                                int[][] res = ac.getOcupacoes();
+                                int l = res.length;
+                                out.writeInt(l);
+                                for(int i = 0; i < l; i++)
+                                    for(int j = 0; j < l; j++)
+                                        out.writeInt(res[i][j]);
+
+                                out.flush();
+                                break;
+                            case 6:
+                                System.out.println("Comunicar que está infetado");
+                                user = in.readUTF();
+                                ac.estaInfetado(user);
+                                out.writeBoolean(true);
                                 out.flush();
                                 break;
                             default:

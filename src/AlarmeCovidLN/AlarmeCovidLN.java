@@ -87,17 +87,16 @@ public class AlarmeCovidLN {
      * Regista um utilizador
      * @param username
      * @param password
-     * @param autorizacao autorização especial para transferir o mapa das ocupações
      * @return true se for registado com sucesso
      */
-    public boolean registar(String username, String password, boolean autorizacao){
+    public boolean registar(String username, String password){
         if(estaRegistado(username))
             return false;
         else{
             l.lock();
             try{
                 this.users.put(username, new Utilizador(username, password,
-                        autorizacao,-1,-1));
+                        false,-1,-1));
             }finally {
                 l.unlock();
             }
@@ -183,35 +182,6 @@ public class AlarmeCovidLN {
         } finally {
             l.unlock();
         }
-    }
-
-    /**
-     *  Indica quantas pessoas estão numa localização atualmente
-     * @param x coordenada x
-     * @param y coordenada y
-     * @return num
-     */
-    public int quantasPessoas(int x, int y){
-        this.l.lock();
-        int count = 0;
-        try{
-            Localizacao loc = new Localizacao(x,y);
-            Collection<Utilizador> c = users.values();
-            for(Utilizador u: c)
-                u.lock();
-
-            this.l.unlock();
-
-            for(Utilizador u : c)
-                if(u.estaNumaLocalizacao(loc))
-                    count++;
-
-            for(Utilizador u: c)
-                u.unlock();
-        } finally {
-            this.l.unlock();
-        }
-        return count;
     }
 
     /**

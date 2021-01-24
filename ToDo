@@ -44,7 +44,7 @@ Tags:	-0. Sair
 	    - recebe: int
 	-5. verificar mapa com as ocupações de todas as localizações
 	    - envia: tag
-	    - recebe: matriz de inteiros
+	    - recebe: tamanho da matriz e a matriz de inteiros
 	-6. comunicar que está infetado
 	    - envia: tag, username
 	    - recebe: sucesso?
