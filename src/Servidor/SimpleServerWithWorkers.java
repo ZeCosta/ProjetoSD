@@ -22,13 +22,14 @@ public class SimpleServerWithWorkers {
                 try{
                     for (;;) {
                         int tag = in.readInt();
-                        String user, pass;
+                        String user, pass, uniqueUser;
                         int x,y;
                         switch(tag){
                             case 1:
                                 boolean[] bs;
                                 System.out.println("Login");
                                 user = in.readUTF();
+                                uniqueUser = user;
                                 pass = in.readUTF();
                                 bs = ac.login(user, pass);
 
@@ -50,15 +51,24 @@ public class SimpleServerWithWorkers {
                                 user = in.readUTF();
                                 x = in.readInt();
                                 y = in.readInt();
-                                ac.comunicarLocalizacao(user, x, y);
-                                out.writeBoolean(true);
+                                if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN())
+                                    out.writeBoolean(false);
+                                else {
+                                    ac.comunicarLocalizacao(user, x, y);
+                                    out.writeBoolean(true);
+                                }
                                 out.flush();
                                 break;
                             case 4:
                                 System.out.println("Quantidade de pessoas numa localização");
                                 x = in.readInt();
                                 y = in.readInt();
-                                out.writeInt(ac.getOcupacao(x,y));
+                                if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN())
+                                    out.writeBoolean(false);
+                                else {
+                                    out.writeBoolean(true);
+                                    out.writeInt(ac.getOcupacao(x, y));
+                                }
                                 out.flush();
                                 break;
                             case 5:
@@ -71,6 +81,7 @@ public class SimpleServerWithWorkers {
                                         out.writeInt(res[i][j][0]);
                                         out.writeInt(res[i][j][1]);
                                     }
+                                out.writeBoolean(true);
 
                                 out.flush();
                                 break;
@@ -98,10 +109,6 @@ public class SimpleServerWithWorkers {
                 
             };
             new Thread(worker).start();
-            /*    
-            for (int i = 0; i < WORKERS_PER_CONNECTION; ++i)
-                new Thread(worker).start();
-            */
         }
 
     }

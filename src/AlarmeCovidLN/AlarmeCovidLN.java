@@ -17,6 +17,10 @@ public class AlarmeCovidLN {
         this.l = new ReentrantLock();
     }
 
+    public int getN(){
+        return this.N;
+    }
+
     /**
      * Devolve o número de pessoas a ocupar uma localização no momento atual
      * @param x coordenada x
