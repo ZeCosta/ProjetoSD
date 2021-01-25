@@ -119,11 +119,10 @@ public class Stub{
         try{
             out.writeInt(7);
             out.flush();
-            boolean b=in.readBoolean();
-            
-            return b;
+  			
+  			if(!in.readBoolean()) throw new FromServerException("Stub error - Falhou a comunicar infeção");
+            return in.readBoolean();
 
-            //throw new FromServerException("Stub error - Falhou a comunicar infeção");
         } catch(Exception e){
             throw e;
         }
