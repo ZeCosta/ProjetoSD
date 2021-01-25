@@ -69,8 +69,6 @@ public class Stub{
        
             out.flush();
 
-            //if(!in.readBoolean()) throw new FromServerException("Stub error - Não foi possível comunicar localização");
-
         }catch(Exception e){
             throw e;
         }

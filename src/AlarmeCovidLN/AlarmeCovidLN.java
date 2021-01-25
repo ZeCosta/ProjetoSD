@@ -251,6 +251,8 @@ public class AlarmeCovidLN {
                     for(Utilizador ut: us)
                         ut.lock();
 
+                    System.out.println("a");
+
                     Celula cel = mapa[x][y];
                     if(cel == null)
                         mapa[x][y] = new Celula();
@@ -260,16 +262,19 @@ public class AlarmeCovidLN {
                     int coordyAtual = u.getlAtual().getY();
 
                     if(coordxAtual >= 0 && coordyAtual >= 0)
-                        mapa[coordxAtual][coordyAtual].lock();
+                        if(mapa[coordxAtual][coordyAtual]!=null)
+                            mapa[coordxAtual][coordyAtual].lock();
 
                     l.unlock();
 
+                    System.out.println("a");
                     try{
                     	if(u.isInfetado() || u.getlAtual().equals(loc))
                     	    return false;
 
                     	u.setlAtual(loc);
 
+                    System.out.println("a");
 	                    for(Utilizador ut: us)
 	                        if(ut.getlAtual().equals(loc) && !ut.equals(u) && ut.isLogged()) {
 	                            u.addContacto(ut.getUsername());
@@ -277,13 +282,17 @@ public class AlarmeCovidLN {
 	                        }
 
 
+                    System.out.println("a");
 	                    // 3.Adicionar este utilizador à nova localização,
                         // e decrementar o nº de pessoas da localização antiga
 	                    mapa[x][y].addUser(user);
                         if(coordxAtual >= 0 && coordyAtual >= 0)
-                            mapa[coordxAtual][coordyAtual].reduzirN();
+                            if(mapa[coordxAtual][coordyAtual]!=null)
+                                mapa[coordxAtual][coordyAtual].reduzirN();
 
-                    return true;
+                        
+                    System.out.println("a");
+                        return true;
 
                     }finally{
                     	for(Utilizador ut: us)
@@ -291,7 +300,8 @@ public class AlarmeCovidLN {
 
                     	mapa[x][y].unlock();
                         if(coordxAtual >= 0 && coordyAtual >= 0)
-                            mapa[coordxAtual][coordyAtual].unlock();
+                            if(mapa[coordxAtual][coordyAtual]!=null)
+                                mapa[coordxAtual][coordyAtual].unlock();
                     }
             }
             else
@@ -315,7 +325,8 @@ public class AlarmeCovidLN {
             Collection<String> cs = u.getContactos();
             for(String c: cs) {
                 users.get(c).setRisco();
-                users.get(c).c.signal();
+                users.get(c).c.signalAll();
+                System.out.println("Possivel: " + c);
             }
 
             for(Utilizador ut: us)

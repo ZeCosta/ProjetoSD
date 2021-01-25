@@ -2,6 +2,9 @@ package src.Servidor;
 
 import src.AlarmeCovidLN.AlarmeCovidLN;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.*;
@@ -12,6 +15,7 @@ public class SimpleServerWithWorkers {
         AlarmeCovidLN ac = new AlarmeCovidLN(10); /* Damos como argumento o tamanho do mapa (NxN) */
         ServerSocket ss = new ServerSocket(12345);
 
+
         /* Administrador da aplicação, que possui a autorização especial para descarregar o mapa */
         System.out.println("Admin criado: " + ac.registar("1", "1",true));
 
@@ -19,9 +23,11 @@ public class SimpleServerWithWorkers {
             Socket s = ss.accept();
             DataOutputStream out = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
             DataInputStream in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
+            Lock writer = new ReentrantLock();
 
             Runnable worker = () -> {
                 String uniqueUser = null; /* Esta string contém o username do utilizador que 'invocou' este worker */
+                
                 try{
                     for (;;) {
                         int tag = in.readInt();
@@ -34,9 +40,8 @@ public class SimpleServerWithWorkers {
                                 user = in.readUTF();
                                 pass = in.readUTF();
                                 bs = ac.login(user, pass);
-                                //System.out.println("bs(0) : " + bs[0]);
-                                //System.out.println("bs(1) : " + bs[1]);
 
+                                writer.lock();
                                 out.writeBoolean(bs[0]);
                                 if(bs[0]){
                                     uniqueUser = user;
@@ -44,33 +49,49 @@ public class SimpleServerWithWorkers {
                                 }
 
                                 out.flush();
+
+                                writer.unlock();
+                                
                                 break;
                             case 2:
                                 System.out.println("Registar");
                                 user = in.readUTF();
                                 pass = in.readUTF();
-                                out.writeBoolean(ac.registar(user, pass, false));
+                                boolean a=ac.registar(user, pass, false);
+
+                                writer.lock();
+                                out.writeBoolean(a);
                                 out.flush();
+
+                                writer.unlock();
                                 break;
                             case 3:
                                 System.out.println("Comunicar localização");
                                 //user = in.readUTF();
                                 x = in.readInt();
                                 y = in.readInt();
+
+                                writer.lock();
                                 out.writeInt(tag);
                                 if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN() || ac.getInfetados().contains(uniqueUser))
                                     out.writeBoolean(false);
                                 else {
                                     System.out.println("user a comunicar localização -> " + uniqueUser);
-                                    out.writeBoolean(ac.comunicarLocalizacao(uniqueUser, x, y));
+                                    boolean b = ac.comunicarLocalizacao(uniqueUser, x, y);
+                                    System.out.println(b);
+                                    out.writeBoolean(b);
                                 }
                                 out.flush();
+
+                                writer.unlock();
                                 System.out.println("fim de comunicacao");
                                 break;
                             case 4:
                                 System.out.println("Quantidade de pessoas numa localização");
                                 x = in.readInt();
                                 y = in.readInt();
+
+                                writer.lock();
                                 out.writeInt(tag);
                                 if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN() || ac.getInfetados().contains(uniqueUser))
                                     out.writeBoolean(false);
@@ -79,12 +100,14 @@ public class SimpleServerWithWorkers {
                                     out.writeInt(ac.getOcupacao(x, y));
                                 }
                                 out.flush();
+                                writer.unlock();
                                 break;
                             case 5:
                                 System.out.println("Mapa com o nº de pessoas em cada localização");
                                 int[][][] res = ac.getOcupacoes();
                                 int l = res.length;
 
+                                writer.lock();
                                 out.writeInt(tag);
                                 out.writeBoolean(true);
                                 out.writeInt(l);
@@ -95,11 +118,14 @@ public class SimpleServerWithWorkers {
                                     }
                                     
                                 out.flush();
+                                writer.unlock();
                                 break;
                             case 6:
                                 System.out.println("Comunicar que está infetado");
+                                
+                                writer.lock();
                                 out.writeInt(tag);
-                                if(uniqueUser != null) {
+                                if(uniqueUser!= null) {
                                     out.writeBoolean(ac.estaInfetado(uniqueUser));
                                     //out.writeUTF(uniqueUser);
 
@@ -109,11 +135,37 @@ public class SimpleServerWithWorkers {
                                 else out.writeBoolean(false);
 
                                 out.flush();
+                                writer.unlock();
                                 break;
                             case 7:
                                 System.out.println("Verificar se está em risco de contaminação");
+                                final String uniqueUser1 = uniqueUser;
+                                Runnable infetado = () -> {
+                                    try{
+                                        boolean r = ac.alertarRisco(uniqueUser1);
+                                        writer.lock();
+                                        
+                                        out.writeInt(tag);
+                                        out.writeBoolean(r);
+                                        if(r)out.writeBoolean(r);
+                                        out.flush();
+
+                                        writer.unlock();
+                                    }catch(Exception e){
+                                        System.out.println(e);
+                                    }
+                                };
+                                new Thread(infetado).start();
+
+
+                                //funcao risco faz wait na variavel de condicao
+                                break;
+                            /*case 7:
+                                System.out.println("Verificar se está em risco de contaminação");
                                 boolean[] r;
                                 out.writeInt(tag);
+
+                                //funcao risco faz wait na variavel de condicao
                                 r = ac.risco(uniqueUser);
                                 if(r[0]) {
                                     out.writeBoolean(r[0]);
@@ -122,16 +174,20 @@ public class SimpleServerWithWorkers {
                                 else
                                     out.writeBoolean(false);
                                 out.flush();
-                                break;
+                                break;*/
                             default:
                                 System.out.println("Opção " + tag + "não implementada");
                                 
+                                writer.lock();
                                 out.writeBoolean(false);
                                 out.flush();
+
+                                writer.unlock();
+                                s.close();
                                 break;
                         }
 
-                        System.out.println();
+                        System.out.println("___________");
                     }
 
                 }catch(Exception e){

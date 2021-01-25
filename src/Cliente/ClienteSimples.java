@@ -28,7 +28,7 @@ public class ClienteSimples {
         }
 
         System.out.println("4. Comunicar que está infetado");
-        System.out.println("5. Verificar se esta em risco de estar infetado");
+        //System.out.println("5. Verificar se esta em risco de estar infetado");
     }
 
 	private static int readOption() {
@@ -251,9 +251,10 @@ public class ClienteSimples {
                         if(b){
                             switch(tag){
                                 case 3:
+                                    System.out.println("Sucesso");
                                     break;
                                 case 4:
-                                    System.out.println("Estao " +in.readInt() + " pessoas infetadas nesse local");
+                                    System.out.println("Estao " + in.readInt() + " pessoas nesse local");
                                     break;
                                 case 5:
                                     imprimirMapa(in);
@@ -277,7 +278,6 @@ public class ClienteSimples {
                         }
                         
 
-
                         if(tag!=0){
                             bar.await(1);
                         }
@@ -290,10 +290,11 @@ public class ClienteSimples {
             };
             new Thread(escrita).start();
 
+            //pedido de estar infetado (wait no sv se é 0 e esta login)
+            verificarRiscoInfecao();
 
             while(op!=0){
                 try{
-                    //bar.await(0); //COLOCAR SÓ DEPOIS DAS FUNCOES QUE PEDEM OUTPUT SEQUENCIAL!
                     apresentarMenuLog();
                     op=readOption();
 
@@ -327,16 +328,19 @@ public class ClienteSimples {
                             comunicarInfecao();
                             bar.await(0);
                             break;
+                        /*
                         case 5:
                             System.out.println("Estou em risco?");
                             verificarRiscoInfecao();
                             bar.await(0);
                             break;
+                            */
                         default:
                             System.out.println("Erro na escolha");
                             break;
                     }
                 }catch(Exception e){
+                    s.close();
 
                 }
             }

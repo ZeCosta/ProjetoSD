@@ -4,7 +4,7 @@ package src.Cliente;
 import java.util.concurrent.locks.*;
 
 public class Barreira {
-	int leitura = 0; //leitura=0 -> é preciso ler; leitura=1 -> é preciso receber
+	int leitura = 1; //leitura=0 -> é preciso ler; leitura=1 -> é preciso receber
   	
   	private Lock l=new ReentrantLock();
   	private Condition cond= l.newCondition();
