@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class AlarmeCovidLN {
     private Map<String, Utilizador> users;
-    private int N;
+    private final int N;
     private final Celula[][] mapa; /* Mapa que guarda quem esteve ou está em cada localização */
     private Lock l;
 
@@ -39,7 +39,7 @@ public class AlarmeCovidLN {
         l.unlock();
 
         for(Utilizador u: us) {
-            if (u.getlAtual().equals(loc)) {
+            if (u.getlAtual().equals(loc) && u.getLogged()) {
                 res++;
             }
             u.unlock();
@@ -64,6 +64,7 @@ public class AlarmeCovidLN {
                 res.add(u.getUsername());
         return res;
     }
+
 
     /**
      * Devolve o mapa com as ocupações
@@ -122,14 +123,14 @@ public class AlarmeCovidLN {
      * @param password
      * @return true se for registado com sucesso
      */
-    public boolean registar(String username, String password){
+    public boolean registar(String username, String password, boolean permissao){
         l.lock();
         try{
         if(estaRegistado(username))
             return false;
         else{
                 this.users.put(username, new Utilizador(username, password,
-                        false,-1,-1));
+                        permissao,-1,-1));
                 return true;
             }
         } finally {
@@ -155,15 +156,35 @@ public class AlarmeCovidLN {
             u.lock();
             l.unlock();
             try {
-                if (password.equals(u.getPassword()) && !u.isLogged()) {
-                    u.setLogged(true);
-                    res[0] = true;
-                    res[1] = u.isAutorizado();
-                }
+            	if(!u.isInfetado()){
+	                if (password.equals(u.getPassword()) && !u.isLogged()) {
+	                    u.setLogged(true);
+	                    res[0] = true;
+	                    res[1] = u.isAutorizado();
+	                }
+            	}
                 return res;
             } finally {
                 u.unlock();
             }
+        
+    }
+
+     public void logoff(String username) {
+        l.lock();
+        
+        Utilizador u = users.get(username);
+        if(u == null) {
+            l.unlock();
+        }else{
+	        u.lock();
+	        l.unlock();
+	        try {
+	            u.setLogged(false);
+	        } finally {
+	            u.unlock();
+	        }
+        }
         
     }
 
@@ -192,22 +213,29 @@ public class AlarmeCovidLN {
 
                     l.unlock();
 
-                    u.setlAtual(loc);
+                    try{
+                    	if(u.isInfetado()) return false;
 
-                    for(Utilizador ut: us)
-                        if(ut.getlAtual().equals(loc) && !ut.equals(u)) {
-                            u.addContacto(ut.getUsername());
-                            ut.addContacto(user);
-                        }
+                    	u.setlAtual(loc);
 
-                    for(Utilizador ut: us)
-                        ut.unlock();
+	                    for(Utilizador ut: us)
+	                        if(ut.getlAtual().equals(loc) && !ut.equals(u)) {
+	                            u.addContacto(ut.getUsername());
+	                            ut.addContacto(user);
+	                        }
 
-                    // 3.Adicionar este utilizador ao mapa
-                    mapa[x][y].addUser(user);
-                    mapa[x][y].unlock();
+
+	                    // 3.Adicionar este utilizador ao mapa
+	                    mapa[x][y].addUser(user);
 
                     return true;
+
+                    }finally{
+                    	for(Utilizador ut: us)
+                        	ut.unlock();	
+
+                    	mapa[x][y].unlock();
+                    }
             }
             else
                 return false;

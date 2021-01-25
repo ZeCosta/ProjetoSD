@@ -1,7 +1,6 @@
 package src.Servidor;
 
 import src.AlarmeCovidLN.AlarmeCovidLN;
-import src.TaggedConnection;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,6 +11,8 @@ public class SimpleServerWithWorkers {
     public static void main(String[] args) throws Exception {
         AlarmeCovidLN ac = new AlarmeCovidLN(10); /* Damos como argumento o tamanho do mapa (NxN) */
         ServerSocket ss = new ServerSocket(12345);
+
+        System.out.println("Admin criado: " + ac.registar("1", "1",true));
 
         while(true) {
             Socket s = ss.accept();
@@ -32,8 +33,8 @@ public class SimpleServerWithWorkers {
                                 user = in.readUTF();
                                 pass = in.readUTF();
                                 bs = ac.login(user, pass);
-                                System.out.println("bs(0) : " + bs[0]);
-                                System.out.println("bs(1) : " + bs[1]);
+                                //System.out.println("bs(0) : " + bs[0]);
+                                //System.out.println("bs(1) : " + bs[1]);
 
                                 out.writeBoolean(bs[0]);
                                 if(bs[0]){
@@ -47,7 +48,7 @@ public class SimpleServerWithWorkers {
                                 System.out.println("Registar");
                                 user = in.readUTF();
                                 pass = in.readUTF();
-                                out.writeBoolean(ac.registar(user, pass));
+                                out.writeBoolean(ac.registar(user, pass, false));
                                 out.flush();
                                 break;
                             case 3:
@@ -95,9 +96,11 @@ public class SimpleServerWithWorkers {
                                 if(uniqueUser != null) {
                                     out.writeBoolean(ac.estaInfetado(uniqueUser));
                                     out.writeUTF(uniqueUser);
+
+                                    //Close socket?
+                                
                                 }
-                                else
-                                    out.writeBoolean(false);
+                                else out.writeBoolean(false);
 
                                 out.flush();
                                 break;
@@ -113,7 +116,9 @@ public class SimpleServerWithWorkers {
                     }
 
                 }catch(Exception e){
-                    //Log off unique user!!
+                    // Try Log off unique user!!
+                    ac.logoff(uniqueUser);
+                    System.out.println(uniqueUser + " is now offline");
                     e.printStackTrace();
                 }
                 

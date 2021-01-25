@@ -86,6 +86,10 @@ public class Utilizador {
         this.logged = logged;
     }
 
+    public boolean getLogged() {
+        return this.logged;
+    }
+
     public boolean isAutorizado() {
         return autorizado;
     }
