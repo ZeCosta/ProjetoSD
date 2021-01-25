@@ -88,8 +88,7 @@ public class SimpleServerWithWorkers {
                                         out.writeInt(res[i][j][0]);
                                         out.writeInt(res[i][j][1]);
                                     }
-                                out.writeBoolean(true);
-
+                                    
                                 out.flush();
                                 break;
                             case 6:

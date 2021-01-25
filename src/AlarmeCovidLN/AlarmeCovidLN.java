@@ -74,33 +74,47 @@ public class AlarmeCovidLN {
         int[][][] res = new int[N][N][2];
         int x,y;
 
+		for(x = 0; x <N; x++)
+            for(y = 0; y < N; y++) {
+	            res[x][y][0] = 0;
+	            res[x][y][1] = 0;
+        	}
+
         l.lock();
-        try{
+
+            ArrayList<Celula> celulas = new ArrayList<Celula>();
+            ArrayList<Integer> xs = new ArrayList<Integer>();
+            ArrayList<Integer> ys = new ArrayList<Integer>();
+            
             //Dar lock
             for(x = 0; x <N; x++)
-                for(y = 0; y < N; y++)
-                    mapa[x][y].lock();
+                for(y = 0; y < N; y++){
+                	if(mapa[x][y] != null){
+                		mapa[x][y].lock();
+                		celulas.add(mapa[x][y]);
+                		xs.add(x);
+                		ys.add(y);
+                	} 
+                }
 
             Collection<String> infetados = getInfetados();
 
             l.unlock();
 
-                //Obter ocupacao
-            for(x = 0; x <N; x++)
-                for(y = 0; y < N; y++) {
-                    res[x][y][0] = mapa[x][y].getUsers().size();
-                    res[x][y][1] = numElemsIguais(mapa[x][y].getUsers(),infetados);
-                }
+            //Obter ocupacao
+            int i;
+            for(i=0;i<celulas.size();i++){
+            	res[xs.get(i)][ys.get(i)][0] = celulas.get(i).getUsers().size();
+	            res[xs.get(i)][ys.get(i)][1] = numElemsIguais(celulas.get(i).getUsers(),infetados);
+            }
 
-                //Dar unlock
-            for(x = 0; x <N; x++)
-                for(y = 0; y < N; y++)
-                    mapa[x][y].unlock();
-
+            
+            //Dar unlock
+			for(Celula c:celulas){
+            	c.unlock();
+            }
             return res;
-        } finally {
-            l.unlock();
-        }
+        
     }
 
     /**
