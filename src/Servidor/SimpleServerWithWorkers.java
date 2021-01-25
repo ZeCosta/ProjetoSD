@@ -63,12 +63,14 @@ public class SimpleServerWithWorkers {
                                 break;
                             case 5:
                                 System.out.println("Mapa com o nº de pessoas em cada localização");
-                                int[][] res = ac.getOcupacoes();
+                                int[][][] res = ac.getOcupacoes();
                                 int l = res.length;
                                 out.writeInt(l);
                                 for(int i = 0; i < l; i++)
-                                    for(int j = 0; j < l; j++)
-                                        out.writeInt(res[i][j]);
+                                    for(int j = 0; j < l; j++){
+                                        out.writeInt(res[i][j][0]);
+                                        out.writeInt(res[i][j][1]);
+                                    }
 
                                 out.flush();
                                 break;

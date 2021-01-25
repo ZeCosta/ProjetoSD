@@ -144,9 +144,10 @@ public class AlarmeCovidLN {
     public boolean[] login(String username, String password) {
         boolean[] res = new boolean[2];
         l.lock();
-        try {
+        
             Utilizador u = users.get(username);
             if(u == null) {
+                l.unlock();
                 return res;
             }
             u.lock();
@@ -161,9 +162,7 @@ public class AlarmeCovidLN {
             } finally {
                 u.unlock();
             }
-        } finally {
-            l.unlock();
-        }
+        
     }
 
     /**
