@@ -28,7 +28,7 @@ public class ClienteSimples {
         }
 
         System.out.println("4. Comunicar que está infetado");
-        //System.out.println("5. Verificar se esta em risco de estar infetado");
+        System.out.println("5. Notificar se uma localização está vazia");
     }
 
 	private static int readOption() {
@@ -293,7 +293,9 @@ public class ClienteSimples {
                         }
                         
 
-                        if(tag!=7){
+                        System.out.println("teste antes if");
+                        if(tag!=7 && tag!=8){
+                            System.out.println("teste");
                             bar.await(1);
                         }
 
@@ -346,7 +348,7 @@ public class ClienteSimples {
                         case 5:
                             System.out.println("Notificar quando local está vazio");
                             notificarLocalVazio();
-                            bar.await(0);
+                            //bar.await(0);
                             break;
                         default:
                             System.out.println("Erro na escolha");
