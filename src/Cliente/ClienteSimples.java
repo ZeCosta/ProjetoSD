@@ -2,6 +2,7 @@ package src.Cliente;
 
 import java.net.Socket;
 import java.util.Random;
+import java.io.*;
 
 import java.util.Scanner;
 
@@ -113,7 +114,7 @@ public class ClienteSimples {
 		    // send request
 		   	stub.comunicarLocalizacao(x,y);
  
-            System.out.println("Comunicacao bem sucedida");
+            //System.out.println("Comunicacao bem sucedida");
              
 
         }catch(Exception e){
@@ -236,45 +237,94 @@ public class ClienteSimples {
         	System.out.println();
         }
 
+        // Até aqui ser sequencial! 
+
         if(loggedin){
         	//fazer cenas
-            while(op!=0){
-                apresentarMenuLog();
-                op=readOption();
+            
+            //Uma thread para cada pedido? -> erro de sincronizacao de mais que um a ler
+            Barreira bar = new Barreira();
 
-                switch(op){
-                    case 0:
-                        System.out.println("A sair");
-                        break;
-                    case 1:
-                        System.out.println("Comunicar Localização Atual");
-                        comunicarLocalizacao();
-                        break;
-                    case 2:
-                        System.out.println("Verificar ocupação de uma Localizacao");
-                        verificarOcupacao();
-                        break;
-                    case 3:
-                        if(permissao){
-                            System.out.println("Tem permissao");
-                        	System.out.println("Imprimir Mapa de ocupaçoes e doentes");
-                        	imprimirMapa();
+            Runnable escrita = () -> {
+                try{
+                    DataInputStream in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
+                    int tag;
+                    while(true){
+                        tag = in.readInt();
+                        boolean b = in.readBoolean();
+                        if(b){
+                            switch(tag){
+                                case 3:
+                                    break;
+                                case 4:
+                                    if(!in.readBoolean())
+                                        throw new FromServerException("Stub error - Falha na verificação da ocupação em (" + x + "," + y + ")");
+                                    in.readInt();
+                                    
+                                    break;
+                            }
+                        }else{
+                            System.out.println("erro na opcao");
                         }
-                        else{
-                           System.out.println("Não tem permissao");
+                        
+
+
+                        if(tag!=0){
+                            bar.await(1);
                         }
-                        break;
-                    case 4:
-                        System.out.println("Comunicar infeção");
-                        comunicarInfecao();
-                        break;
-                    case 5:
-                        System.out.println("Estou em risco?");
-                        verificarRiscoInfecao();
-                        break;
-                    default:
-                        System.out.println("Erro na escolha");
-                        break;
+
+                    }
+                }catch(Exception e){
+                    System.out.println("erro");
+                }
+
+            };
+            new Thread(escrita).start();
+
+
+            while(op!=0){
+                try{
+                    bar.await(0);
+                    apresentarMenuLog();
+                    op=readOption();
+
+                    switch(op){
+                        case 0:
+                            System.out.println("A sair");
+                            s.close();
+                            break;
+                        case 1:
+                            System.out.println("Comunicar Localização Atual");
+                            comunicarLocalizacao();
+                            break;
+                        case 2:
+                            System.out.println("Verificar ocupação de uma Localizacao");
+                            verificarOcupacao();
+                            break;
+                        case 3:
+                            if(permissao){
+                                System.out.println("Tem permissao");
+                            	System.out.println("Imprimir Mapa de ocupaçoes e doentes");
+                            	imprimirMapa();
+                            }
+                            else{
+                               System.out.println("Não tem permissao");
+                            }
+                            break;
+                        case 4:
+                            System.out.println("Comunicar infeção");
+                            comunicarInfecao();
+                            break;
+                        case 5:
+                            System.out.println("Estou em risco?");
+                            verificarRiscoInfecao();
+                            break;
+                        default:
+                            System.out.println("Erro na escolha");
+                            break;
+                    }
+                }catch(Exception e){
+
                 }
             }
         }

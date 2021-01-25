@@ -57,6 +57,7 @@ public class SimpleServerWithWorkers {
                                 //user = in.readUTF();
                                 x = in.readInt();
                                 y = in.readInt();
+                                out.writeInt(tag);
                                 if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN() || ac.getInfetados().contains(uniqueUser))
                                     out.writeBoolean(false);
                                 else {
