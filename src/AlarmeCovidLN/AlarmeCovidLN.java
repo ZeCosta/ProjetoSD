@@ -293,6 +293,10 @@ public class AlarmeCovidLN {
 
         u.lock();
         l.unlock();
+
+        if(u.isInfetado())
+            return res;
+
         res[0] = true;
         res[1] = u.isRisco();
         u.unlock();

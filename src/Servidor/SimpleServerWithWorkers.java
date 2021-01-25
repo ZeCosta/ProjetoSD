@@ -57,7 +57,7 @@ public class SimpleServerWithWorkers {
                                 //user = in.readUTF();
                                 x = in.readInt();
                                 y = in.readInt();
-                                if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN())
+                                if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN() || ac.getInfetados().contains(uniqueUser))
                                     out.writeBoolean(false);
                                 else {
                                     System.out.println("user a comunicar localização -> " + uniqueUser);
@@ -70,7 +70,7 @@ public class SimpleServerWithWorkers {
                                 System.out.println("Quantidade de pessoas numa localização");
                                 x = in.readInt();
                                 y = in.readInt();
-                                if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN())
+                                if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN() || ac.getInfetados().contains(uniqueUser))
                                     out.writeBoolean(false);
                                 else {
                                     out.writeBoolean(true);
