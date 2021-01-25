@@ -7,6 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.*;
 import java.io.*;
 
 public class SimpleServerWithWorkers {
@@ -76,15 +77,12 @@ public class SimpleServerWithWorkers {
                                 if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN() || ac.getInfetados().contains(uniqueUser))
                                     out.writeBoolean(false);
                                 else {
-                                    System.out.println("user a comunicar localização -> " + uniqueUser);
                                     boolean b = ac.comunicarLocalizacao(uniqueUser, x, y);
-                                    System.out.println(b);
                                     out.writeBoolean(b);
                                 }
                                 out.flush();
 
                                 writer.unlock();
-                                System.out.println("fim de comunicacao");
                                 break;
                             case 4:
                                 System.out.println("Quantidade de pessoas numa localização");
@@ -199,10 +197,18 @@ public class SimpleServerWithWorkers {
                         System.out.println("___________");
                     }
 
+                }catch(EOFException e){
+                    // Try Log off unique user!!
+                    ac.logoff(uniqueUser);
+                    if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline");
+                }catch(SocketException e){
+                    // Try Log off unique user!!
+                    ac.logoff(uniqueUser);
+                    if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline (closed socket)");
                 }catch(Exception e){
                     // Try Log off unique user!!
                     ac.logoff(uniqueUser);
-                    System.out.println(uniqueUser + " is now offline");
+                    if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline");
                     e.printStackTrace();
                 }
                 

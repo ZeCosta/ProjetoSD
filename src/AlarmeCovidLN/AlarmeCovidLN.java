@@ -256,17 +256,14 @@ public class AlarmeCovidLN {
         l.lock();
             Utilizador u = users.get(user);
             if(u != null){
-                System.out.println("a");
                     // 1.Adicionar pessoas desta localizacao nos contactos do u
                     // 2.Adicionar o u como contacto das restantes pessoas
                     Collection<Utilizador> us = users.values();
-                    System.out.println("antes");
+                   
                     for(Utilizador ut: us) {
-                        System.out.println("dentro for");
                         ut.lock();
                     }
 
-                    System.out.println("a");
 
                     Celula cel = mapa[x][y];
                     if(cel == null)
@@ -282,14 +279,13 @@ public class AlarmeCovidLN {
 
                     l.unlock();
 
-                    System.out.println("a");
                     try{
                     	if(u.isInfetado() || u.getlAtual().equals(loc))
                     	    return false;
 
                     	u.setlAtual(loc);
 
-                    System.out.println("a");
+
 	                    for(Utilizador ut: us)
 	                        if(ut.getlAtual().equals(loc) && !ut.equals(u) && ut.isLogged()) {
 	                            u.addContacto(ut.getUsername());
@@ -297,7 +293,7 @@ public class AlarmeCovidLN {
 	                        }
 
 
-                    System.out.println("a");
+
 	                    // 3.Adicionar este utilizador à nova localização,
                         // e decrementar o nº de pessoas da localização antiga
 	                    mapa[x][y].addUser(user);
@@ -306,7 +302,7 @@ public class AlarmeCovidLN {
                                 mapa[coordxAtual][coordyAtual].reduzirN();
 
                         
-                    System.out.println("a");
+                        
                         return true;
 
                     }finally{

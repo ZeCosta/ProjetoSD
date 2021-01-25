@@ -75,6 +75,7 @@ public class ClienteSimples {
 		    // send request
 		    b = stub.login(user,pass);
 
+            System.out.println();
             System.out.println("Login bem sucedido");
             permissao=b;
             
@@ -207,7 +208,12 @@ public class ClienteSimples {
     
 
     public static void main(String[] args) throws Exception {
-        s = new Socket("localhost", 12345);
+        try{
+        	s = new Socket("localhost", 12345);
+        }catch(Exception e){
+        	System.out.println("Não foi possivel connectar-se ao server");
+        	return;
+        }
 
         try {
         	stub = new Stub(s);
@@ -225,17 +231,18 @@ public class ClienteSimples {
         while(op!=0 && !loggedin){
         	apresentarMenuRL();
         	op=readOption();
+            System.out.println();
 
         	switch(op){
         		case 0:
-        			System.out.println("A sair");
+        			System.out.println("A sair...");
         			break;
         		case 1:
-        			System.out.println("Login...");
+        			System.out.println("Login:");
         			loggedin=login();
         			break;
         		case 2:
-                    System.out.println("Register...");
+                    System.out.println("Register:");
         			register();
         			break;
         		default:
@@ -261,10 +268,11 @@ public class ClienteSimples {
                     while(true){
                         tag = in.readInt();
                         boolean b = in.readBoolean();
+                    	System.out.println();
                         if(b){
                             switch(tag){
                                 case 3:
-                                    System.out.println("Sucesso");
+                                    System.out.println("Localizacao foi alterada com sucesso");
                                     break;
                                 case 4:
                                     System.out.println("Estao " + in.readInt() + " pessoas nesse local");
@@ -289,19 +297,25 @@ public class ClienteSimples {
                                 	break;
                             }
                         }else{
-                            System.out.println("erro na opcao");
+                            System.out.println("Erro na opcao");
                         }
                         
+                    	System.out.println();
 
-                        System.out.println("teste antes if");
                         if(tag!=7 && tag!=8){
-                            System.out.println("teste");
                             bar.await(1);
                         }
 
                     }
+                }catch(IOException e){
+                    System.out.println("Socket closed");
+                    try{
+                    	bar.await(1);
+                    }catch(Exception ex){
+                    	System.out.println("erro" + ex);
+                	}
                 }catch(Exception e){
-                    System.out.println("erro");
+                    System.out.println("erro" + e);
                 }
 
             };
@@ -314,14 +328,15 @@ public class ClienteSimples {
                 try{
                     apresentarMenuLog();
                     op=readOption();
+                    System.out.println();
 
                     switch(op){
                         case 0:
-                            System.out.println("A sair");
+                            System.out.println("A sair...");
                             s.close();
                             break;
                         case 1:
-                            System.out.println("Comunicar Localização Atual");
+                            System.out.println("Comunicar Localização Atual:");
                             comunicarLocalizacao();
                             bar.await(0);
                             break;
@@ -348,6 +363,7 @@ public class ClienteSimples {
                         case 5:
                             System.out.println("Notificar quando local está vazio");
                             notificarLocalVazio();
+                            System.out.println();
                             //bar.await(0);
                             break;
                         default:
