@@ -104,6 +104,17 @@ public class SimpleServerWithWorkers {
 
                                 out.flush();
                                 break;
+                            case 7:
+                                System.out.println("Verificar se está em risco de contaminação");
+                                boolean[] r;
+                                r = ac.risco(uniqueUser);
+                                if(r[0]) {
+                                    out.writeBoolean(r[0]);
+                                    out.writeBoolean(r[1]);
+                                }
+                                else
+                                    out.writeBoolean(false);
+                                break;
                             default:
                                 System.out.println("Opção " + tag + "não implementada");
                                 

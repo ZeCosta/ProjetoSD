@@ -106,6 +106,10 @@ public class Utilizador {
         this.risco = true;
     }
 
+    public boolean isRisco(){
+        return this.risco;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
