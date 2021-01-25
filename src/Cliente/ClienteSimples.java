@@ -293,7 +293,7 @@ public class ClienteSimples {
 
             while(op!=0){
                 try{
-                    bar.await(0);
+                    //bar.await(0); //COLOCAR SÓ DEPOIS DAS FUNCOES QUE PEDEM OUTPUT SEQUENCIAL!
                     apresentarMenuLog();
                     op=readOption();
 
@@ -305,15 +305,18 @@ public class ClienteSimples {
                         case 1:
                             System.out.println("Comunicar Localização Atual");
                             comunicarLocalizacao();
+                            bar.await(0);
                             break;
                         case 2:
                             System.out.println("Verificar ocupação de uma Localizacao");
                             verificarOcupacao();
+                            bar.await(0);
                             break;
                         case 3:
                             if(permissao){
                             	System.out.println("Imprimir Mapa de ocupaçoes e doentes");
                             	imprimirMapa();
+                            	bar.await(0);
                             }
                             else{
                                System.out.println("Não tem permissao");
@@ -322,10 +325,12 @@ public class ClienteSimples {
                         case 4:
                             System.out.println("Comunicar infeção");
                             comunicarInfecao();
+                            bar.await(0);
                             break;
                         case 5:
                             System.out.println("Estou em risco?");
                             verificarRiscoInfecao();
+                            bar.await(0);
                             break;
                         default:
                             System.out.println("Erro na escolha");
