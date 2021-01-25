@@ -32,6 +32,7 @@ public class ClienteSimples {
         }else{
             System.out.println("(nao_tem_permissao)");
         }
+        System.out.println("4. Comunicar que está infetado");
     }
 
 	private static int readOption() {
@@ -144,6 +145,15 @@ public class ClienteSimples {
         }
 
     }
+
+    public static void comunicarInfecao(){
+	    try{
+	        String res = stub.comunicarInfecao();
+	        System.out.println("Utilizador " + res + " registado como infetado");
+        } catch(Exception e){
+	        System.out.println("Erro " +e);
+        }
+    }
     
 
     public static void main(String[] args) throws Exception {
@@ -212,6 +222,10 @@ public class ClienteSimples {
                         else{
                            System.out.println("Não tem permissao");
                         }
+                        break;
+                    case 4:
+                        System.out.println("Comunicar infeção");
+                        comunicarInfecao();
                         break;
                     default:
                         System.out.println("Erro na escolha");

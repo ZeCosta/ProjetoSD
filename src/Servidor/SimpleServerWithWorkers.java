@@ -92,9 +92,13 @@ public class SimpleServerWithWorkers {
                                 break;
                             case 6:
                                 System.out.println("Comunicar que está infetado");
-                                user = in.readUTF();
-                                ac.estaInfetado(user);
-                                out.writeBoolean(true);
+                                if(uniqueUser != null) {
+                                    out.writeBoolean(ac.estaInfetado(uniqueUser));
+                                    out.writeUTF(uniqueUser);
+                                }
+                                else
+                                    out.writeBoolean(false);
+
                                 out.flush();
                                 break;
                             default:

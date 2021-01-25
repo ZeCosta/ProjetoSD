@@ -217,9 +217,8 @@ public class AlarmeCovidLN {
      * Marca um utilizador como infetado, e adiciona os seus contactos ao grupo de risco
      * @param username username do infetado
      */
-    public void estaInfetado (String username) {
+    public boolean estaInfetado (String username) {
         l.lock();
-        try {
             Collection<Utilizador> us = users.values();
             Utilizador u = users.get(username);
             for(Utilizador ut : us)
@@ -234,8 +233,7 @@ public class AlarmeCovidLN {
 
             for(Utilizador ut: us)
                 ut.unlock();
-        } finally {
-            l.unlock();
-        }
+
+            return true;
     }
 }

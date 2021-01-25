@@ -53,7 +53,7 @@ public class Stub{
 	   
 	        out.flush();
 
-	        if(!in.readBoolean()) throw new Exception();
+	        if(!in.readBoolean()) throw new FromServerException("Stub error - Registo inválido (já existe?)");
 
     	}catch(Exception e){
     		throw e;
@@ -85,11 +85,27 @@ public class Stub{
        
             out.flush();
 
-            if(!in.readBoolean()) throw new Exception();
+            if(!in.readBoolean())
+                throw new FromServerException("Stub error - Falha na verificação da ocupação em (" + x + "," + y + ")");
 
             return in.readInt();
 
         }catch(Exception e){
+            throw e;
+        }
+    }
+
+    public String comunicarInfecao() throws Exception{
+        try{
+            out.writeInt(6);
+            out.flush();
+
+            if(!in.readBoolean())
+                throw new FromServerException("Stub error - Falhou a comunicar infeção");
+
+            else
+                return in.readUTF();
+        } catch(Exception e){
             throw e;
         }
     }
