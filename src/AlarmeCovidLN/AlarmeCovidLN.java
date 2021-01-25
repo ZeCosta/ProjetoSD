@@ -19,19 +19,26 @@ public class AlarmeCovidLN {
         this.l = new ReentrantLock();
     }
 
-    /*public boolean celulaVazia(int x, int y){
+    public boolean celulaVazia(int x, int y){
         l.lock();
-        try{
             Celula c = mapa[x][y];
             if(c == null)
                 mapa[x][y] = new Celula();
             mapa[x][y].lock();
             l.unlock();
-            if(mapa[x][y])
-        }finally {
-            l.unlock();
+        try {
+            try {
+                while (mapa[x][y].getnPessoasAtual() != 0)
+                    mapa[x][y].c.await();
+                return true;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } finally {
+            mapa[x][y].unlock();
         }
-    }*/
+    }
 
     public boolean alertarRisco(String user){
         l.lock();
@@ -39,12 +46,16 @@ public class AlarmeCovidLN {
         u.lock();
         l.unlock();
         try {
-            while (!u.isRisco())
-                u.c.await();
-            return true;
-        } catch (InterruptedException e){
-            e.printStackTrace();
-            return false;
+            try {
+                while (!u.isRisco())
+                    u.c.await();
+                return true;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } finally {
+            u.unlock();
         }
     }
 
@@ -245,11 +256,15 @@ public class AlarmeCovidLN {
         l.lock();
             Utilizador u = users.get(user);
             if(u != null){
+                System.out.println("a");
                     // 1.Adicionar pessoas desta localizacao nos contactos do u
                     // 2.Adicionar o u como contacto das restantes pessoas
                     Collection<Utilizador> us = users.values();
-                    for(Utilizador ut: us)
+                    System.out.println("antes");
+                    for(Utilizador ut: us) {
+                        System.out.println("dentro for");
                         ut.lock();
+                    }
 
                     System.out.println("a");
 

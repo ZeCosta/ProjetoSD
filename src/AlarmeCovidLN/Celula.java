@@ -11,7 +11,7 @@ public class Celula {
     private Collection<String> users; /* Coleção com toda a gente que passou nesta célula (localização) */
     private int nPessoasAtual;
     private Lock l;
-    private Condition c;
+    public Condition c;
 
     public Celula(){
         this.users = new TreeSet<>();
@@ -43,5 +43,9 @@ public class Celula {
 
     public void unlock(){
         l.unlock();
+    }
+
+    public int getnPessoasAtual(){
+        return this.nPessoasAtual;
     }
 }

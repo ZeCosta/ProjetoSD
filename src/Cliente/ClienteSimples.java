@@ -328,13 +328,6 @@ public class ClienteSimples {
                             comunicarInfecao();
                             bar.await(0);
                             break;
-                        /*
-                        case 5:
-                            System.out.println("Estou em risco?");
-                            verificarRiscoInfecao();
-                            bar.await(0);
-                            break;
-                            */
                         default:
                             System.out.println("Erro na escolha");
                             break;
