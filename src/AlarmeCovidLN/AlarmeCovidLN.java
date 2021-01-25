@@ -233,7 +233,7 @@ public class AlarmeCovidLN {
                     	u.setlAtual(loc);
 
 	                    for(Utilizador ut: us)
-	                        if(ut.getlAtual().equals(loc) && !ut.equals(u)) {
+	                        if(ut.getlAtual().equals(loc) && !ut.equals(u) && ut.isLogged()) {
 	                            u.addContacto(ut.getUsername());
 	                            ut.addContacto(user);
 	                        }
