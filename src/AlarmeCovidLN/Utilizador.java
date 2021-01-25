@@ -3,6 +3,7 @@ package src.AlarmeCovidLN;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,7 +16,8 @@ public class Utilizador {
     private boolean logged;
     private boolean autorizado;
     private Collection<String> contactos; /* Contactos desde sempre */
-    public Lock ul;
+    private Lock ul;
+    public Condition c;
 
     public Utilizador(String username, String password, boolean temAutorizacao,
                       int x, int y){
@@ -28,6 +30,7 @@ public class Utilizador {
         this.autorizado = temAutorizacao;
         this.contactos = new HashSet<>();
         this.ul = new ReentrantLock();
+        this.c = ul.newCondition();
     }
 
     public void addContacto(String c){

@@ -1,6 +1,8 @@
 package src.AlarmeCovidLN;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,6 +17,35 @@ public class AlarmeCovidLN {
         this.users = new HashMap<>();
         this.mapa = new Celula[N][N];
         this.l = new ReentrantLock();
+    }
+
+    /*public boolean celulaVazia(int x, int y){
+        l.lock();
+        try{
+            Celula c = mapa[x][y];
+            if(c == null)
+                mapa[x][y] = new Celula();
+            mapa[x][y].lock();
+            l.unlock();
+            if(mapa[x][y])
+        }finally {
+            l.unlock();
+        }
+    }*/
+
+    public boolean alertarRisco(String user){
+        l.lock();
+        Utilizador u = users.get(user);
+        u.lock();
+        l.unlock();
+        try {
+            while (!u.isRisco())
+                u.c.await();
+            return true;
+        } catch (InterruptedException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public int getN(){
@@ -225,10 +256,17 @@ public class AlarmeCovidLN {
                         mapa[x][y] = new Celula();
                     mapa[x][y].lock();
 
+                    int coordxAtual = u.getlAtual().getX();
+                    int coordyAtual = u.getlAtual().getY();
+
+                    if(coordxAtual >= 0 && coordyAtual >= 0)
+                        mapa[coordxAtual][coordyAtual].lock();
+
                     l.unlock();
 
                     try{
-                    	if(u.isInfetado()) return false;
+                    	if(u.isInfetado() || u.getlAtual().equals(loc))
+                    	    return false;
 
                     	u.setlAtual(loc);
 
@@ -239,8 +277,11 @@ public class AlarmeCovidLN {
 	                        }
 
 
-	                    // 3.Adicionar este utilizador ao mapa
+	                    // 3.Adicionar este utilizador à nova localização,
+                        // e decrementar o nº de pessoas da localização antiga
 	                    mapa[x][y].addUser(user);
+                        if(coordxAtual >= 0 && coordyAtual >= 0)
+                            mapa[coordxAtual][coordyAtual].reduzirN();
 
                     return true;
 
@@ -249,6 +290,8 @@ public class AlarmeCovidLN {
                         	ut.unlock();	
 
                     	mapa[x][y].unlock();
+                        if(coordxAtual >= 0 && coordyAtual >= 0)
+                            mapa[coordxAtual][coordyAtual].unlock();
                     }
             }
             else
@@ -270,8 +313,10 @@ public class AlarmeCovidLN {
 
             u.setInfetado(true);
             Collection<String> cs = u.getContactos();
-            for(String c: cs)
+            for(String c: cs) {
                 users.get(c).setRisco();
+                users.get(c).c.signal();
+            }
 
             for(Utilizador ut: us)
                 ut.unlock();
