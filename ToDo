@@ -58,3 +58,4 @@ ToDo:
  - Notificar todos os que estiveram nas mesmas localizações que ele
  - Avisar um utilizador, quando uma localização estiver vazia
  - Programa do cliente fechar automaticamente quando há um EOFException (o socket é fechado pelo lado do servidor) -> não é urgente, pode ficar para ultimo
+ - Logoff!
