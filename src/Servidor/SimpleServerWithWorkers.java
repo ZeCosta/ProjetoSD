@@ -71,6 +71,7 @@ public class SimpleServerWithWorkers {
                                 System.out.println("Quantidade de pessoas numa localização");
                                 x = in.readInt();
                                 y = in.readInt();
+                                out.writeInt(tag);
                                 if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN() || ac.getInfetados().contains(uniqueUser))
                                     out.writeBoolean(false);
                                 else {
@@ -83,6 +84,9 @@ public class SimpleServerWithWorkers {
                                 System.out.println("Mapa com o nº de pessoas em cada localização");
                                 int[][][] res = ac.getOcupacoes();
                                 int l = res.length;
+
+                                out.writeInt(tag);
+                                out.writeBoolean(true);
                                 out.writeInt(l);
                                 for(int i = 0; i < l; i++)
                                     for(int j = 0; j < l; j++){
@@ -94,9 +98,10 @@ public class SimpleServerWithWorkers {
                                 break;
                             case 6:
                                 System.out.println("Comunicar que está infetado");
+                                out.writeInt(tag);
                                 if(uniqueUser != null) {
                                     out.writeBoolean(ac.estaInfetado(uniqueUser));
-                                    out.writeUTF(uniqueUser);
+                                    //out.writeUTF(uniqueUser);
 
                                     //Close socket?
                                 
@@ -108,6 +113,7 @@ public class SimpleServerWithWorkers {
                             case 7:
                                 System.out.println("Verificar se está em risco de contaminação");
                                 boolean[] r;
+                                out.writeInt(tag);
                                 r = ac.risco(uniqueUser);
                                 if(r[0]) {
                                     out.writeBoolean(r[0]);

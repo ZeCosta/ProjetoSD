@@ -127,45 +127,48 @@ public class ClienteSimples {
     	int x = lerInt("Insira a coordenada x: ");
     	int y = lerInt("Insira a coordenada y: ");
 
-        boolean b;
-
         try{
 		    // send request
 		    stub.verificarOcupacao(x,y);
-
-            System.out.println("Estao " +stub.verificarOcupacao(x,y) + " pessoa(s) no local (" + x + "," + y + ")");
-            
 
         }catch(Exception e){
          	System.out.println("Erro: "+e);
         }
 
     }
-
     public static void imprimirMapa(){
+        try{
+            stub.imprimirMapa();            
+
+        } catch(Exception e){
+            System.out.println("Erro " +e);
+        }
+    }
+
+    public static void imprimirMapa(DataInputStream in){
 	    try{
 	    	StringBuilder sb = new StringBuilder();
-	        int[][][] mapa = stub.imprimirMapa();
-
 	        System.out.println("Mapa de ocupacoes/infecoes");
-	        int l=mapa.length;
+
+            int l=in.readInt();
 	       	
-	       	sb.append("  ");
+            sb.append("  ");
 	        for(int i = 0; i < l; i++){
 	        	sb.append(i).append("     ");
 	        }
+            
             sb.append("\n");
-
-	        for(int i = 0; i < l; i++){
+            
+            for(int i = 0; i < l; i++){
 	        	sb.append(i).append(" ");
                 for(int j = 0; j < l; j++){
-                	sb.append("(").append(mapa[i][j][0]);
-                	sb.append("/").append(mapa[i][j][1]);
+                	sb.append("(").append(in.readInt());
+                	sb.append("/").append(in.readInt());
                 	sb.append(") ");
-            	}
+                }
             	sb.append("\n");
             }
-	        
+      
 	        System.out.println(sb.toString());
         } catch(Exception e){
 	        System.out.println("Erro " +e);
@@ -174,8 +177,7 @@ public class ClienteSimples {
 
     public static void comunicarInfecao(){
 	    try{
-	        String res = stub.comunicarInfecao();
-	        System.out.println("Utilizador " + res + " registado como infetado");
+	        stub.comunicarInfecao();
         } catch(Exception e){
 	        System.out.println("Erro " +e);
         }
@@ -184,13 +186,7 @@ public class ClienteSimples {
 
     public static void verificarRiscoInfecao(){
 	    try{
-	        boolean b = stub.verificarRiscoInfecao();
-	        StringBuilder sb = new StringBuilder();
-	        sb.append("Você ");
-	        if(!b) sb.append("não ");
-	        sb.append("está em risco de estar infetado(a)");
-
-	        System.out.println(sb.toString());
+	       stub.verificarRiscoInfecao();
         } catch(Exception e){
 	        System.out.println("Erro " +e);
         }
@@ -257,11 +253,24 @@ public class ClienteSimples {
                                 case 3:
                                     break;
                                 case 4:
-                                    if(!in.readBoolean())
-                                        throw new FromServerException("Stub error - Falha na verificação da ocupação em (" + x + "," + y + ")");
-                                    in.readInt();
-                                    
+                                    System.out.println("Estao " +in.readInt() + " pessoas infetadas nesse local");
                                     break;
+                                case 5:
+                                    imprimirMapa(in);
+                                    break;
+                                case 6:
+                                    System.out.println("Utilizador foi registado como infetado");
+                                    break;
+                                case 7:
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append("Você ");
+                                    if(!(in.readBoolean())) sb.append("não ");
+                                    sb.append("está em risco de estar infetado(a)");
+
+                                    System.out.println(sb.toString());
+
+                                    break;
+
                             }
                         }else{
                             System.out.println("erro na opcao");
@@ -303,7 +312,6 @@ public class ClienteSimples {
                             break;
                         case 3:
                             if(permissao){
-                                System.out.println("Tem permissao");
                             	System.out.println("Imprimir Mapa de ocupaçoes e doentes");
                             	imprimirMapa();
                             }

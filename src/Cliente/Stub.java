@@ -76,7 +76,7 @@ public class Stub{
         }
     }
 
-    public int verificarOcupacao(int x, int y) throws Exception{
+    public void verificarOcupacao(int x, int y) throws Exception{
         try{
             out.writeInt(4);
 
@@ -85,61 +85,36 @@ public class Stub{
        
             out.flush();
 
-            if(!in.readBoolean())
-                throw new FromServerException("Stub error - Falha na verificação da ocupação em (" + x + "," + y + ")");
-
-            return in.readInt();
-
         }catch(Exception e){
             throw e;
         }
     }
     
-    public int[][][] imprimirMapa() throws Exception{
+    public void imprimirMapa() throws Exception{
     	try{
             out.writeInt(5);
             out.flush();
             
-            int l=in.readInt();
-            int[][][] mapa = new int[l][l][2];
-            
-            for(int i = 0; i < l; i++)
-                for(int j = 0; j < l; j++){
-                    mapa[i][j][0]=in.readInt();
-                    mapa[i][j][1]=in.readInt();
-                }
-
-            return mapa;
         } catch(Exception e){
             throw e;
         }
     }
 
-    public boolean verificarRiscoInfecao() throws Exception{
+    public void verificarRiscoInfecao() throws Exception{
         try{
             out.writeInt(7);
             out.flush();
-            boolean b;
-            b=in.readBoolean();
-  			if(!b) throw new FromServerException("Stub error - Falhou a comunicar infeção");
-            
-            return in.readBoolean();
 
         } catch(Exception e){
             throw e;
         }
     }
 
-    public String comunicarInfecao() throws Exception{
+    public void comunicarInfecao() throws Exception{
         try{
             out.writeInt(6);
             out.flush();
 
-            if(!in.readBoolean())
-                throw new FromServerException("Stub error - Falhou a comunicar infeção");
-
-            else
-                return in.readUTF();
         } catch(Exception e){
             throw e;
         }
