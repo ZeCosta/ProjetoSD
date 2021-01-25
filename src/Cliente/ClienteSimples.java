@@ -142,6 +142,36 @@ public class ClienteSimples {
 
     }
 
+    public static void imprimirMapa(){
+	    try{
+	    	StringBuilder sb = new StringBuilder();
+	        int[][][] mapa = stub.imprimirMapa();
+
+	        System.out.println("Mapa de ocupacoes/infecoes");
+	        int l=mapa.length;
+	       	
+	       	sb.append("  ");
+	        for(int i = 0; i < l; i++){
+	        	sb.append(i).append("     ");
+	        }
+            sb.append("\n");
+
+	        for(int i = 0; i < l; i++){
+	        	sb.append(i).append(" ");
+                for(int j = 0; j < l; j++){
+                	sb.append("(").append(mapa[i][j][0]);
+                	sb.append("/").append(mapa[i][j][1]);
+                	sb.append(") ");
+            	}
+            	sb.append("\n");
+            }
+	        
+	        System.out.println(sb.toString());
+        } catch(Exception e){
+	        System.out.println("Erro " +e);
+        }
+    }
+
     public static void comunicarInfecao(){
 	    try{
 	        String res = stub.comunicarInfecao();
@@ -211,9 +241,10 @@ public class ClienteSimples {
                         verificarOcupacao();
                         break;
                     case 3:
-                        System.out.println("Imprimir Mapa de ocupaçoes e doentes");
                         if(permissao){
                             System.out.println("Tem permissao");
+                        	System.out.println("Imprimir Mapa de ocupaçoes e doentes");
+                        	imprimirMapa();
                         }
                         else{
                            System.out.println("Não tem permissao");

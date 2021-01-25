@@ -94,6 +94,26 @@ public class Stub{
             throw e;
         }
     }
+    
+    public int[][][] imprimirMapa() throws Exception{
+    	try{
+            out.writeInt(5);
+            out.flush();
+            
+            int l=in.readInt();
+            int[][][] mapa = new int[l][l][2];
+            
+            for(int i = 0; i < l; i++)
+                for(int j = 0; j < l; j++){
+                    mapa[i][j][0]=in.readInt();
+                    mapa[i][j][1]=in.readInt();
+                }
+
+            return mapa;
+        } catch(Exception e){
+            throw e;
+        }
+    }
 
     public String comunicarInfecao() throws Exception{
         try{
@@ -110,5 +130,4 @@ public class Stub{
         }
     }
 
-    
 }
