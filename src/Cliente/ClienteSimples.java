@@ -187,7 +187,7 @@ public class ClienteSimples {
 	        StringBuilder sb = new StringBuilder();
 	        sb.append("Você ");
 	        if(!b) sb.append("não ");
-	        sb.append("está infetado(a)");
+	        sb.append("está em risco de estar infetado(a)");
 
 	        System.out.println(sb.toString());
         } catch(Exception e){

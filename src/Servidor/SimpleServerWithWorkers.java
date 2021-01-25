@@ -114,6 +114,7 @@ public class SimpleServerWithWorkers {
                                 }
                                 else
                                     out.writeBoolean(false);
+                                out.flush();
                                 break;
                             default:
                                 System.out.println("Opção " + tag + "não implementada");
