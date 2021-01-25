@@ -22,13 +22,12 @@ public class ClienteSimples {
         System.out.println("0. Sair");
         System.out.println("1. Comunicar Localização Atual");
         System.out.println("2. Verificar ocupação de uma Localizacao");
-        System.out.println("3. Imprimir Mapa de ocupaçoes e doentes");
         if(permissao){
-            System.out.println("(tem_permissao)");
-        }else{
-            System.out.println("(nao_tem_permissao)");
+        	System.out.println("3. Imprimir Mapa de ocupaçoes e doentes");
         }
+
         System.out.println("4. Comunicar que está infetado");
+        System.out.println("5. Verificar se esta infetado");
     }
 
 	private static int readOption() {
@@ -180,6 +179,21 @@ public class ClienteSimples {
 	        System.out.println("Erro " +e);
         }
     }
+
+
+    public static void verificarInfecao(){
+	    try{
+	        boolean b = stub.verificarInfecao();
+	        StringBuilder sb = new StringBuilder();
+	        sb.append("Você ");
+	        if(!b) sb.append("não ");
+	        sb.append("está infetado(a)");
+
+	        System.out.println(sb.toString());
+        } catch(Exception e){
+	        System.out.println("Erro " +e);
+        }
+    }
     
 
     public static void main(String[] args) throws Exception {
@@ -253,6 +267,10 @@ public class ClienteSimples {
                     case 4:
                         System.out.println("Comunicar infeção");
                         comunicarInfecao();
+                        break;
+                    case 5:
+                        System.out.println("Estou infetado?");
+                        verificarInfecao();
                         break;
                     default:
                         System.out.println("Erro na escolha");

@@ -115,6 +115,20 @@ public class Stub{
         }
     }
 
+    public boolean verificarInfecao() throws Exception{
+        try{
+            out.writeInt(7);
+            out.flush();
+            boolean b=in.readBoolean();
+            
+            return b;
+
+            //throw new FromServerException("Stub error - Falhou a comunicar infeção");
+        } catch(Exception e){
+            throw e;
+        }
+    }
+
     public String comunicarInfecao() throws Exception{
         try{
             out.writeInt(6);
