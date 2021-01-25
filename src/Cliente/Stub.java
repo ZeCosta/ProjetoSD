@@ -115,7 +115,7 @@ public class Stub{
         }
     }
 
-    public boolean verificarInfecao() throws Exception{
+    public boolean verificarRiscoInfecao() throws Exception{
         try{
             out.writeInt(7);
             out.flush();

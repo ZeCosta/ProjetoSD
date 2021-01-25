@@ -27,7 +27,7 @@ public class ClienteSimples {
         }
 
         System.out.println("4. Comunicar que está infetado");
-        System.out.println("5. Verificar se esta infetado");
+        System.out.println("5. Verificar se esta em risco de estar infetado");
     }
 
 	private static int readOption() {
@@ -181,9 +181,9 @@ public class ClienteSimples {
     }
 
 
-    public static void verificarInfecao(){
+    public static void verificarRiscoInfecao(){
 	    try{
-	        boolean b = stub.verificarInfecao();
+	        boolean b = stub.verificarRiscoInfecao();
 	        StringBuilder sb = new StringBuilder();
 	        sb.append("Você ");
 	        if(!b) sb.append("não ");
@@ -269,8 +269,8 @@ public class ClienteSimples {
                         comunicarInfecao();
                         break;
                     case 5:
-                        System.out.println("Estou infetado?");
-                        verificarInfecao();
+                        System.out.println("Estou em risco?");
+                        verificarRiscoInfecao();
                         break;
                     default:
                         System.out.println("Erro na escolha");
