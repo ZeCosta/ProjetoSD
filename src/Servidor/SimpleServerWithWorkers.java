@@ -37,7 +37,7 @@ public class SimpleServerWithWorkers {
                         switch(tag){
                             case 1:
                                 boolean[] bs;
-                                System.out.println("Login");
+                                //System.out.println("Login");
                                 user = in.readUTF();
                                 pass = in.readUTF();
                                 bs = ac.login(user, pass);
@@ -55,7 +55,7 @@ public class SimpleServerWithWorkers {
                                 
                                 break;
                             case 2:
-                                System.out.println("Registar");
+                                //System.out.println("Registar");
                                 user = in.readUTF();
                                 pass = in.readUTF();
                                 boolean a=ac.registar(user, pass, false);
@@ -67,7 +67,7 @@ public class SimpleServerWithWorkers {
                                 writer.unlock();
                                 break;
                             case 3:
-                                System.out.println("Comunicar localização");
+                                //System.out.println("Comunicar localização");
                                 //user = in.readUTF();
                                 x = in.readInt();
                                 y = in.readInt();
@@ -85,7 +85,7 @@ public class SimpleServerWithWorkers {
                                 writer.unlock();
                                 break;
                             case 4:
-                                System.out.println("Quantidade de pessoas numa localização");
+                                //System.out.println("Quantidade de pessoas numa localização");
                                 x = in.readInt();
                                 y = in.readInt();
 
@@ -101,7 +101,7 @@ public class SimpleServerWithWorkers {
                                 writer.unlock();
                                 break;
                             case 5:
-                                System.out.println("Mapa com o nº de pessoas em cada localização");
+                                //System.out.println("Mapa com o nº de pessoas em cada localização");
                                 int[][][] res = ac.getOcupacoes();
                                 int l = res.length;
 
@@ -119,7 +119,7 @@ public class SimpleServerWithWorkers {
                                 writer.unlock();
                                 break;
                             case 6:
-                                System.out.println("Comunicar que está infetado");
+                                //System.out.println("Comunicar que está infetado");
                                 
                                 writer.lock();
                                 out.writeInt(tag);
@@ -136,7 +136,7 @@ public class SimpleServerWithWorkers {
                                 writer.unlock();
                                 break;
                             case 7:
-                                System.out.println("Verificar se está em risco de contaminação");
+                                //System.out.println("Verificar se está em risco de contaminação");
                                 final String uniqueUser1 = uniqueUser;
                                 Runnable infetado = () -> {
                                     try{
@@ -159,7 +159,7 @@ public class SimpleServerWithWorkers {
                                 //funcao risco faz wait na variavel de condicao
                                 break;
                             case 8:
-                                System.out.println("Verificar se uma localização está vazia");
+                                //System.out.println("Verificar se uma localização está vazia");
                                 int cx = in.readInt();
                                 int cy = in.readInt();
                                 Runnable vazia = () -> {
@@ -182,33 +182,23 @@ public class SimpleServerWithWorkers {
                                 };
                                 new Thread(vazia).start();
                                 break;
-                            default:
-                                System.out.println("Opção " + tag + "não implementada");
-                                
-                                writer.lock();
-                                out.writeBoolean(false);
-                                out.flush();
-
-                                writer.unlock();
-                                s.close();
-                                break;
                         }
 
-                        System.out.println("___________");
+                        //System.out.println("___________");
                     }
 
                 }catch(EOFException e){
                     // Try Log off unique user!!
                     ac.logoff(uniqueUser);
-                    if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline");
+                    //if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline");
                 }catch(SocketException e){
                     // Try Log off unique user!!
                     ac.logoff(uniqueUser);
-                    if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline (closed socket)");
+                    //if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline (closed socket)");
                 }catch(Exception e){
                     // Try Log off unique user!!
                     ac.logoff(uniqueUser);
-                    if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline");
+                    //if(uniqueUser!=null)System.out.println(uniqueUser + " is now offline");
                     e.printStackTrace();
                 }
                 

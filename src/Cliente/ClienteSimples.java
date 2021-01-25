@@ -81,7 +81,7 @@ public class ClienteSimples {
             
 	       return true;
 	    }catch(Exception e){
-        	System.out.println("Erro: "+e);
+        	System.out.println(e);
         	return false;
         }
 
