@@ -1,3 +1,4 @@
+git add *.sh
 git add src/Cliente/*.java
 git add src/Servidor/Simple*.java
 git add src/AlarmeCovidLN/*.java

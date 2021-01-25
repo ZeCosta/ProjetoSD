@@ -118,4 +118,19 @@ public class Stub{
         }
     }
 
+
+    public void notificarLocalVazio(int x, int y) throws Exception{
+        try{
+            out.writeInt(8);
+
+            out.writeInt(x); 
+            out.writeInt(y); 
+       
+            out.flush();
+
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
 }
