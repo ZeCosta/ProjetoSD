@@ -12,6 +12,7 @@ public class SimpleServerWithWorkers {
         AlarmeCovidLN ac = new AlarmeCovidLN(10); /* Damos como argumento o tamanho do mapa (NxN) */
         ServerSocket ss = new ServerSocket(12345);
 
+        /* Administrador da aplicação, que possui a autorização especial para descarregar o mapa */
         System.out.println("Admin criado: " + ac.registar("1", "1",true));
 
         while(true) {
@@ -20,7 +21,7 @@ public class SimpleServerWithWorkers {
             DataInputStream in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
 
             Runnable worker = () -> {
-                String uniqueUser = null;
+                String uniqueUser = null; /* Esta string contém o username do utilizador que 'invocou' este worker */
                 try{
                     for (;;) {
                         int tag = in.readInt();
