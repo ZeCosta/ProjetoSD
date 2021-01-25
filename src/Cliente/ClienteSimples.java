@@ -117,7 +117,7 @@ public class ClienteSimples {
 		    // send request
 		   	stub.comunicarLocalizacao(x,y);
  
-            System.out.println("Comunicacao bem sucedido");
+            System.out.println("Comunicacao bem sucedida");
              
 
         }catch(Exception e){

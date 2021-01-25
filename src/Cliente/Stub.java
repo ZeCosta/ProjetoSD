@@ -1,6 +1,8 @@
 package src.Cliente;
 
 
+import src.Exceptions.FromServerException;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -33,7 +35,7 @@ public class Stub{
             if(b){
                 b = in.readBoolean();
             }else{
-                throw new Exception();
+                throw new FromServerException("Stub error - Login inválido!");
             } 
 
 	       	return b;
@@ -67,7 +69,7 @@ public class Stub{
        
             out.flush();
 
-            if(!in.readBoolean()) throw new Exception();
+            if(!in.readBoolean()) throw new FromServerException("Stub error - Não foi possível comunicar localização");
 
         }catch(Exception e){
             throw e;

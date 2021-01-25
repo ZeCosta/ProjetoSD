@@ -19,11 +19,11 @@ public class SimpleServerWithWorkers {
             DataInputStream in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
 
             Runnable worker = () -> {
+                String uniqueUser = null;
                 try{
                     for (;;) {
                         int tag = in.readInt();
                         String user, pass;
-                        String uniqueUser=null;
                         int x,y;
                         switch(tag){
                             case 1:
@@ -32,6 +32,8 @@ public class SimpleServerWithWorkers {
                                 user = in.readUTF();
                                 pass = in.readUTF();
                                 bs = ac.login(user, pass);
+                                System.out.println("bs(0) : " + bs[0]);
+                                System.out.println("bs(1) : " + bs[1]);
 
                                 out.writeBoolean(bs[0]);
                                 if(bs[0]){
@@ -56,9 +58,8 @@ public class SimpleServerWithWorkers {
                                 if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN())
                                     out.writeBoolean(false);
                                 else {
-                                    //a funçao devia retornar um bool
-                                    ac.comunicarLocalizacao(uniqueUser, x, y);
-                                    out.writeBoolean(true);
+                                    System.out.println("user a comunicar localização -> " + uniqueUser);
+                                    out.writeBoolean(ac.comunicarLocalizacao(uniqueUser, x, y));
                                 }
                                 out.flush();
                                 System.out.println("fim de comunicacao");
