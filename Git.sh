@@ -9,5 +9,5 @@ if [ $# -eq 0 ]
 	else
 		git commit -m "$1"
 fi
-
+git pull
 git push
