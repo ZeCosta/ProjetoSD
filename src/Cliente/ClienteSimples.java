@@ -1,8 +1,5 @@
 package src.Cliente;
 
-import src.Demultiplexer;
-import src.TaggedConnection;
-
 import java.net.Socket;
 import java.util.Random;
 
@@ -11,7 +8,6 @@ import java.util.Scanner;
 public class ClienteSimples {
 	
 	private static Socket s;
-    private static Demultiplexer c;
     private static Stub stub;
     private static boolean permissao;
 
