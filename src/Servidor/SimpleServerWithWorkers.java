@@ -22,20 +22,22 @@ public class SimpleServerWithWorkers {
                 try{
                     for (;;) {
                         int tag = in.readInt();
-                        String user, pass, uniqueUser;
+                        String user, pass;
+                        String uniqueUser=null;
                         int x,y;
                         switch(tag){
                             case 1:
                                 boolean[] bs;
                                 System.out.println("Login");
                                 user = in.readUTF();
-                                uniqueUser = user;
                                 pass = in.readUTF();
                                 bs = ac.login(user, pass);
 
                                 out.writeBoolean(bs[0]);
-                                if(bs[0])
+                                if(bs[0]){
+                                    uniqueUser = user;
                                     out.writeBoolean(bs[1]);
+                                }
 
                                 out.flush();
                                 break;
@@ -48,16 +50,18 @@ public class SimpleServerWithWorkers {
                                 break;
                             case 3:
                                 System.out.println("Comunicar localização");
-                                user = in.readUTF();
+                                //user = in.readUTF();
                                 x = in.readInt();
                                 y = in.readInt();
                                 if(x < 0 || y < 0 || x >= ac.getN() || y >= ac.getN())
                                     out.writeBoolean(false);
                                 else {
-                                    ac.comunicarLocalizacao(user, x, y);
+                                    //a funçao devia retornar um bool
+                                    ac.comunicarLocalizacao(uniqueUser, x, y);
                                     out.writeBoolean(true);
                                 }
                                 out.flush();
+                                System.out.println("fim de comunicacao");
                                 break;
                             case 4:
                                 System.out.println("Quantidade de pessoas numa localização");
@@ -104,6 +108,7 @@ public class SimpleServerWithWorkers {
                     }
 
                 }catch(Exception e){
+                    //Log off unique user!!
                     e.printStackTrace();
                 }
                 

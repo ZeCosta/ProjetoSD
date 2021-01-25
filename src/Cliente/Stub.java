@@ -17,41 +17,8 @@ public class Stub{
            
     }
 
-    /*
-        public void run(){
-            try {
-                BufferedReader systemin = new BufferedReader(new InputStreamReader(System.in));
 
-                int tag;
-                String input = null;
-
-                while((input = systemin.readLine()) != null){
-                    tag =  Integer.parseInt(input);
-                    
-                    out.writeInt(tag);
-                    switch(tag){
-                        case 0: // 0 -> registar utilizador 
-                        case 1: //)) 1 -> autenticar 
-                            out.writeUTF(systemin.readLine()); // Username 
-                            out.writeUTF(systemin.readLine()); // Password 
-                            break;
-                    }
-                    out.flush();
-                }
-
-                out.writeInt(-1); // Não vai escrever mais nada 
-                out.flush();
-
-                s.shutdownOutput();
-                s.shutdownInput();
-                s.close();
-            } catch(IOException e){
-                e.printStackTrace();
-            }
-        }
-    */
-
-    public boolean[] login(String user, String pass) throws Exception{
+    public boolean login(String user, String pass) throws Exception{
     	try{
 	    	out.writeInt(1);
 
@@ -60,32 +27,68 @@ public class Stub{
 	   
 	        out.flush();
 
-            boolean[] b = new boolean[2];
-	        b[0] = in.readBoolean();
-            if(b[0]) b[1] = in.readBoolean();
+            boolean b;
+	        b = in.readBoolean();
+
+            if(b){
+                b = in.readBoolean();
+            }else{
+                throw new Exception();
+            } 
 
 	       	return b;
     	}catch(Exception e){
     		throw e;
     	}
-
-
     }
 
-    public boolean register(String user, String pass) throws Exception{
+    public void register(String user, String pass) throws Exception{
     	try{
 	    	out.writeInt(2);
 
-	        out.writeUTF(user); /* Username */
-	        out.writeUTF(pass); /* Password */
+	        out.writeUTF(user); 
+	        out.writeUTF(pass); 
 	   
 	        out.flush();
 
-	       	return in.readBoolean();
+	        if(!in.readBoolean()) throw new Exception();
+
     	}catch(Exception e){
     		throw e;
     	}
+    }
 
+    public void comunicarLocalizacao(int x, int y) throws Exception{
+        try{
+            out.writeInt(3);
 
+            out.writeInt(x); 
+            out.writeInt(y); 
+       
+            out.flush();
+
+            if(!in.readBoolean()) throw new Exception();
+
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
+    public int verificarOcupacao(int x, int y) throws Exception{
+        try{
+            out.writeInt(4);
+
+            out.writeInt(x); 
+            out.writeInt(y); 
+       
+            out.flush();
+
+            if(!in.readBoolean()) throw new Exception();
+
+            return in.readInt();
+
+        }catch(Exception e){
+            throw e;
+        }
     }
 }

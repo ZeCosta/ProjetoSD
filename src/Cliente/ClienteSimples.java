@@ -13,7 +13,7 @@ public class ClienteSimples {
 	private static Socket s;
     private static Demultiplexer c;
     private static Stub stub;
-    private static boolean permicao;
+    private static boolean permissao;
 
 	private static void apresentarMenuRL(){
 		System.out.println("-------Menu RL-------");
@@ -27,10 +27,10 @@ public class ClienteSimples {
         System.out.println("1. Comunicar Localização Atual");
         System.out.println("2. Verificar ocupação de uma Localizacao");
         System.out.println("3. Imprimir Mapa de ocupaçoes e doentes");
-        if(permicao){
-            System.out.println("(tem_permicao)");
+        if(permissao){
+            System.out.println("(tem_permissao)");
         }else{
-            System.out.println("(nao_tem_permicao)");
+            System.out.println("(nao_tem_permissao)");
         }
     }
 
@@ -54,26 +54,37 @@ public class ClienteSimples {
         return is.nextLine();
     }
 
+    private static int lerInt(String text) {
+        int op;
+        Scanner is = new Scanner(System.in);
+        System.out.print(text);
+        try {
+            String line = is.nextLine();
+            op = Integer.parseInt(line);
+        }
+        catch (NumberFormatException e) { // Não foi inscrito um int
+            op = -1;
+        }
+        return op;
+    }
+
     private static boolean login(){
     	//System.out.println("Nao implementado");
         String user=lerString("Insira o username: ");
         String pass=lerString("Insira a password: ");
-        boolean[] b;
+        boolean b;
 
         try{
 		    // send request
 		    b = stub.login(user,pass);
 
-		    if(!b[0]) System.out.println("Erro no login");
-		    else{
-                System.out.println("Login bem sucedido");
-                permicao=b[1];
-            } 
-
-	       return b[0];
-        }catch(Exception e){
-         	System.out.println("Erro: "+e);
-         	return false;
+            System.out.println("Login bem sucedido");
+            permissao=b;
+            
+	       return true;
+	    }catch(Exception e){
+        	System.out.println("Erro: "+e);
+        	return false;
         }
 
     }
@@ -86,14 +97,54 @@ public class ClienteSimples {
 
         try{
 		    // send request
-		    b = stub.register(user,pass);
-		    if(!b) System.out.println("Erro no registo");
-		    else System.out.println("Registo bem sucedido");
+		    stub.register(user,pass);
+		    
+		    System.out.println("Registo bem sucedido");
 
         }catch(Exception e){
          	System.out.println("Erro: "+e);
         }
     }
+
+    private static void comunicarLocalizacao(){
+    	//System.out.println("Nao implementado");
+    	int x = lerInt("Insira a coordenada x: ");
+    	int y = lerInt("Insira a coordenada y: ");
+
+        boolean b;
+
+        try{
+		    // send request
+		   	stub.comunicarLocalizacao(x,y);
+ 
+            System.out.println("Comunicacao bem sucedido");
+             
+
+        }catch(Exception e){
+         	System.out.println("Erro: "+e);
+        }
+    }
+
+    private static void verificarOcupacao(){
+    	//System.out.println("Nao implementado");
+    	int x = lerInt("Insira a coordenada x: ");
+    	int y = lerInt("Insira a coordenada y: ");
+
+        boolean b;
+
+        try{
+		    // send request
+		    stub.verificarOcupacao(x,y);
+
+            System.out.println("Estao " +stub.verificarOcupacao(x,y) + " pessoa(s) no local (" + x + "," + y + ")");
+            
+
+        }catch(Exception e){
+         	System.out.println("Erro: "+e);
+        }
+
+    }
+    
 
     public static void main(String[] args) throws Exception {
         s = new Socket("localhost", 12345);
@@ -104,8 +155,6 @@ public class ClienteSimples {
         	System.out.println("Erro a criar Stub");
         }
 
-        c = new Demultiplexer(new TaggedConnection(s));
-        c.start();
 
     	Scanner scin = new Scanner(System.in);
 
@@ -140,7 +189,7 @@ public class ClienteSimples {
         if(loggedin){
         	//fazer cenas
             while(op!=0){
-                apresentarMenuRL();
+                apresentarMenuLog();
                 op=readOption();
 
                 switch(op){
@@ -149,17 +198,19 @@ public class ClienteSimples {
                         break;
                     case 1:
                         System.out.println("Comunicar Localização Atual");
+                        comunicarLocalizacao();
                         break;
                     case 2:
                         System.out.println("Verificar ocupação de uma Localizacao");
+                        verificarOcupacao();
                         break;
                     case 3:
                         System.out.println("Imprimir Mapa de ocupaçoes e doentes");
-                        if(permicao){
-                            System.out.println("Tem premicao");
+                        if(permissao){
+                            System.out.println("Tem permissao");
                         }
                         else{
-                           System.out.println("Não tem premicao");
+                           System.out.println("Não tem permissao");
                         }
                         break;
                     default:
@@ -232,7 +283,5 @@ public class ClienteSimples {
 	        for (Thread t: threads) t.start();
 	        for (Thread t: threads) t.join();
 	    */
-
-        c.close();
     }
 }

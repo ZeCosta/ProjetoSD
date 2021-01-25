@@ -31,22 +31,20 @@ public class AlarmeCovidLN {
         l.lock();
         int res = 0;
         Localizacao loc = new Localizacao(x,y);
-        try {
-            Collection<Utilizador> us = users.values();
-            for(Utilizador u: us)
-                u.lock();
+        
+        Collection<Utilizador> us = users.values();
+        for(Utilizador u: us)
+            u.lock();
 
-            l.unlock();
+        l.unlock();
 
-            for(Utilizador u: us)
-                if(u.getlAtual().equals(loc)) {
-                    res++;
-                    u.unlock();
-                }
-            return res;
-        } finally {
-            l.unlock();
-        }
+        for(Utilizador u: us)
+            if(u.getlAtual().equals(loc)) {
+                res++;
+            }
+            u.unlock();
+        return res;
+        
     }
 
     public int numElemsIguais(Collection<String> a, Collection<String> b){
@@ -176,11 +174,12 @@ public class AlarmeCovidLN {
      * @param y coordenada y
      */
     public void comunicarLocalizacao(String user, int x, int y){
+        Localizacao loc = new Localizacao(x,y);
+        
         l.lock();
         try{
             Utilizador u = users.get(user);
             if(u != null){
-                Localizacao loc = new Localizacao(x,y);
                 try{
                     // 1.Adicionar pessoas desta localizacao nos contactos do u
                     // 2.Adicionar o u como contacto das restantes pessoas
