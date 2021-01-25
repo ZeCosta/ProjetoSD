@@ -160,21 +160,30 @@ public class SimpleServerWithWorkers {
 
                                 //funcao risco faz wait na variavel de condicao
                                 break;
-                            /*case 7:
-                                System.out.println("Verificar se está em risco de contaminação");
-                                boolean[] r;
-                                out.writeInt(tag);
+                            case 8:
+                                System.out.println("Verificar se uma localização está vazia");
+                                int cx = in.readInt();
+                                int cy = in.readInt();
+                                Runnable vazia = () -> {
+                                    try{
+                                        boolean r = ac.celulaVazia(cx,cy);
+                                        writer.lock();
 
-                                //funcao risco faz wait na variavel de condicao
-                                r = ac.risco(uniqueUser);
-                                if(r[0]) {
-                                    out.writeBoolean(r[0]);
-                                    out.writeBoolean(r[1]);
-                                }
-                                else
-                                    out.writeBoolean(false);
-                                out.flush();
-                                break;*/
+                                        out.writeInt(tag);
+                                        out.writeBoolean(r);
+                                        if(r) {
+                                            out.writeInt(cx);
+                                            out.writeInt(cy);
+                                        }
+                                        out.flush();
+
+                                        writer.unlock();
+                                    }catch(Exception e){
+                                        System.out.println(e);
+                                    }
+                                };
+                                new Thread(vazia).start();
+                                break;
                             default:
                                 System.out.println("Opção " + tag + "não implementada");
                                 
