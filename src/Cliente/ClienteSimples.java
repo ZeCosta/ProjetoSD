@@ -278,7 +278,7 @@ public class ClienteSimples {
                         }
                         
 
-                        if(tag!=0){
+                        if(tag!=7){
                             bar.await(1);
                         }
 
