@@ -16,13 +16,13 @@ public class ClienteSimples {
     private static boolean permissao;
 
 	private static void apresentarMenuRL(){
-		System.out.println("-------Menu RL-------");
+		System.out.println("--------Menu RL--------");
 		System.out.println("0. Sair");
 		System.out.println("1. Login");
 		System.out.println("2. Register");
 	}
     private static void apresentarMenuLog(){
-        System.out.println("-------Menu Login-------");
+        System.out.println("--------Menu Login--------");
         System.out.println("0. Sair");
         System.out.println("1. Comunicar Localização Atual");
         System.out.println("2. Verificar ocupação de uma Localizacao");
