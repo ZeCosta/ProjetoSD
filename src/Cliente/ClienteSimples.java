@@ -191,6 +191,19 @@ public class ClienteSimples {
 	        System.out.println("Erro " +e);
         }
     }
+
+    public static void notificarLocalVazio(){
+    	int x = lerInt("Insira a coordenada x: ");
+    	int y = lerInt("Insira a coordenada y: ");
+
+        try{
+		    // send request
+		   	stub.notificarLocalVazio(x,y);
+ 
+        }catch(Exception e){
+         	System.out.println("Erro: "+e);
+        }
+    }
     
 
     public static void main(String[] args) throws Exception {
@@ -271,7 +284,9 @@ public class ClienteSimples {
                                     System.out.println(sb.toString());
 
                                     break;
-
+                                case 8:
+                                	System.out.println("Local (" +in.readInt()+ "," +in.readInt()+ ") está livre");
+                                	break;
                             }
                         }else{
                             System.out.println("erro na opcao");
@@ -326,6 +341,11 @@ public class ClienteSimples {
                         case 4:
                             System.out.println("Comunicar infeção");
                             comunicarInfecao();
+                            bar.await(0);
+                            break;
+                        case 5:
+                            System.out.println("Notificar quando local está vazio");
+                            notificarLocalVazio();
                             bar.await(0);
                             break;
                         default:
