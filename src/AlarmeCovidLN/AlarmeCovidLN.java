@@ -278,4 +278,24 @@ public class AlarmeCovidLN {
 
             return true;
     }
+
+    /**
+     * Verifica se um utilizador esteve em contacto com um infetado
+     * @param username
+     * @return array de 2 booleanos, o primeiro indica se o método foi executado com sucesso, o segundo indica se o utilizador está em risco ou não
+     */
+    public boolean[] risco(String username){
+        boolean[] res = new boolean[2];
+        l.lock();
+        Utilizador u = users.get(username);
+        if(u == null)
+            return res;
+
+        u.lock();
+        l.unlock();
+        res[0] = true;
+        res[1] = u.isRisco();
+        u.unlock();
+        return res;
+    }
 }
