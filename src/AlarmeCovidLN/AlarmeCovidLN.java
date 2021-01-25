@@ -302,7 +302,7 @@ public class AlarmeCovidLN {
                                 mapa[coordxAtual][coordyAtual].reduzirN();
 
                         
-                        
+
                         return true;
 
                     }finally{
@@ -337,7 +337,7 @@ public class AlarmeCovidLN {
             for(String c: cs) {
                 users.get(c).setRisco();
                 users.get(c).c.signalAll();
-                System.out.println("Possivel: " + c);
+                //System.out.println("Possivel: " + c);
             }
 
             for(Utilizador ut: us)
