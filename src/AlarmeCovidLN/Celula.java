@@ -27,6 +27,7 @@ public class Celula {
 
     public void reduzirN(){
         nPessoasAtual--;
+
         if(nPessoasAtual == 0)
             c.signalAll();
     }
